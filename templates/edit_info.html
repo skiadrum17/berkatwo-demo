@@ -12,8 +12,10 @@
         <div>
             <div class="px-6 py-6 border-b border-dark-50/20">
                 <div class="flex items-center gap-3 py-2 w-full">
-                    <img src="{% static 'images/logo.png' %}" alt="Berkat WO Logo" class="w-12 h-12 object-contain drop-shadow-2xl scale-125">
-                    <div>
+                    <a href="{% url 'dashboard' %}">
+                        <img src="{% static 'images/logo.png' %}" alt="Berkat WO Logo" class="w-12 h-12 object-contain drop-shadow-2xl scale-125 hover:scale-150 transition-transform">
+                    </a>
+                    <div class="hidden md:block">
                         <h1 class="text-white font-display font-bold text-lg tracking-wide">BERKAT</h1>
                         <p class="text-gray-500 text-[10px] tracking-widest uppercase leading-tight">Wedding Organizer<br>& Planner Solo</p>
                     </div>

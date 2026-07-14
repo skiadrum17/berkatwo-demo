@@ -73,6 +73,14 @@ def invoice_list_view(request):
     return render(request, 'invoice_list.html', context)
 
 
+def delete_invoice_view(request, nomor_invoice):
+    if request.method == 'POST':
+        invoice = get_object_or_404(Invoice, nomor_invoice=nomor_invoice)
+        invoice.delete()
+        messages.success(request, f'Invoice {nomor_invoice} berhasil dihapus.')
+    return redirect('invoice_list')
+
+
 def admin_invoice_view(request, nomor_invoice):
     """Admin invoice detail — untuk CRUD invoice oleh admin.
     
@@ -163,15 +171,15 @@ def admin_invoice_view(request, nomor_invoice):
     if client_phone.startswith('0'):
         client_phone = '62' + client_phone[1:]
         
-    print_link = request.build_absolute_uri(reverse('print_invoice', args=[invoice.nomor_invoice]))
+    portal_link = request.build_absolute_uri(reverse('client_portal', args=[invoice.nomor_invoice]))
     
     wa_message = f"""Selamat pagi/siang/sore kak {invoice.client.nama_lengkap}. :)
 
 Terima kasih, kami telah menerima pembayaran dari Bapak/Ibu untuk layanan Berkat Wedding Organizer.
 
 Sebagai bukti administrasi, kami lampirkan Invoice Pembayaran yang telah kami update sesuai dengan transaksi yang diterima.
-Bapak/Ibu dapat mengunduh Invoice versi PDF langsung melalui link berikut:
-{print_link}
+Bapak/Ibu dapat melihat dan mengunduh Invoice melalui link berikut:
+{portal_link}
 
 Kami sangat menghargai kepercayaan Bapak/Ibu kepada Berkat Wedding Organizer. Selanjutnya, tim kami akan terus melakukan persiapan dan koordinasi untuk memastikan setiap rangkaian acara berjalan dengan baik.
 
@@ -290,6 +298,11 @@ def create_invoice_view(request):
             wa_number=wa_number,
             request_client=request.POST.get('request_client', ''),
         )
+        
+        tanggal_dibuat = request.POST.get('tanggal_dibuat')
+        if tanggal_dibuat:
+            invoice.tanggal_dibuat = tanggal_dibuat
+            invoice.save()
 
         # Create vendor trackers
         vendor_names = request.POST.getlist('vendor_names')

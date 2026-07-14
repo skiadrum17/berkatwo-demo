@@ -7,6 +7,7 @@ urlpatterns = [
     path('dashboard/create/', views.create_invoice_view, name='create_invoice'),
     path('dashboard/edit-info/', views.edit_info_view, name='edit_info'),
     path('dashboard/invoice/<str:nomor_invoice>/', views.admin_invoice_view, name='admin_invoice'),
+    path('dashboard/invoice/<str:nomor_invoice>/delete/', views.delete_invoice_view, name='delete_invoice'),
     path('dashboard/invoice/<str:nomor_invoice>/print/', views.print_invoice_view, name='print_invoice'),
     path('invoice/<str:nomor_invoice>/', views.client_portal_view, name='client_portal'),
 ]
