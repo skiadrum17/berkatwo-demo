@@ -1,0 +1,265 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load rupiah_filter %}
+{% block title %}Dashboard — Berkat WO{% endblock %}
+
+{% block content %}
+<div class="flex min-h-screen">
+
+    <!-- ===================== SIDEBAR ===================== -->
+    <aside class="w-64 bg-dark-800 border-r border-dark-50/30 flex flex-col justify-between fixed h-full z-30">
+        <!-- Logo -->
+        <div>
+            <div class="px-6 py-6 border-b border-dark-50/20">
+                <div class="flex items-center gap-3 py-2 w-full">
+                    <img src="{% static 'images/logo.png' %}" alt="Berkat WO Logo" class="w-12 h-12 object-contain drop-shadow-2xl scale-125">
+                    <div>
+                        <h1 class="text-white font-display font-bold text-lg tracking-wide">BERKAT</h1>
+                        <p class="text-gray-500 text-[10px] tracking-widest uppercase leading-tight">Wedding Organizer<br>& Planner Solo</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Nav Links -->
+            <nav class="px-4 py-6 space-y-1">
+                <a href="{% url 'dashboard' %}" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-400 hover:bg-dark-50/20 hover:text-white transition-all">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+                    <span class="text-sm">Dashboard</span>
+                </a>
+                <a href="{% url 'invoice_list' %}" class="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-gold-500/10 border border-gold-500/20 text-gold-500 transition-all">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                    <span class="text-sm font-medium">Invoices</span>
+                </a>
+
+                <a href="{% url 'edit_info' %}" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-400 hover:bg-dark-50/20 hover:text-white transition-all">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573 1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.066-2.573c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                    <span class="text-sm">Edit Info</span>
+                </a>
+            </nav>
+        </div>
+
+        <!-- Sidebar footer -->
+        <div class="px-4 py-4 border-t border-dark-50/20 space-y-1">
+            <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-500 hover:text-gray-300 transition-all">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573 1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.066-2.573c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                <span class="text-sm">Settings</span>
+            </a>
+            <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-500 hover:text-gray-300 transition-all">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+                <span class="text-sm">Support</span>
+            </a>
+            <div class="flex items-center gap-3 px-3 py-2.5 mt-3">
+                <div class="w-8 h-8 rounded-full bg-gold-500 flex items-center justify-center text-dark-900 font-bold text-xs">AU</div>
+                <div>
+                    <p class="text-sm text-white font-medium">Admin User</p>
+                    <p class="text-[10px] text-gray-500">Administrator</p>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- ===================== MAIN CONTENT ===================== -->
+    <main class="flex-1 ml-64">
+
+        <!-- Top Bar -->
+        <header class="sticky top-0 z-20 bg-dark-900/80 backdrop-blur-xl border-b border-dark-50/20 px-8 py-4 flex items-center justify-between">
+            <div></div>
+            <div class="flex items-center gap-4">
+                <button id="darkModeToggle" class="flex items-center gap-2 text-gray-400 hover:text-white transition-colors text-sm">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573 1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.066-2.573c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/></svg>
+                    Dark Mode
+                </button>
+                <div class="flex items-center gap-3 pl-4 border-l border-dark-50/30">
+                    <div class="w-9 h-9 rounded-full bg-gold-500 flex items-center justify-center text-dark-900 font-bold text-xs">AU</div>
+                    <div class="hidden md:block">
+                        <p class="text-sm text-white font-medium">Admin User</p>
+                        <p class="text-[10px] text-gray-500">Administrator</p>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <div class="px-8 py-8">
+
+            <!-- Page Header -->
+            <div class="flex items-start justify-between mb-8 animate-fade-in">
+                <div>
+                    <h2 class="text-3xl font-display font-bold text-white mb-2">Monitoring Pembayaran</h2>
+                    <p class="text-gray-500 text-sm max-w-lg">Manage and monitor wedding client payments, invoices, and outstanding balances with precision and elegance.</p>
+            <!-- Header -->
+            <div class="flex items-center justify-between mb-8 animate-fade-in">
+                <div>
+                    <h2 class="text-2xl font-display font-bold text-white tracking-wide">All Invoices</h2>
+                    <p class="text-gray-500 text-sm mt-1">Kelola seluruh tagihan dan pembayaran klien Anda.</p>
+                </div>
+                <a href="{% url 'create_invoice' %}" class="bg-gold-500 hover:bg-gold-600 text-dark-900 font-bold text-sm px-5 py-2.5 rounded-lg flex items-center gap-2 transition-all hover:shadow-lg hover:shadow-gold-500/20">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                    Create Invoice
+                </a>
+            </div>
+
+            <!-- ===================== INVOICE TABLE ===================== -->
+            <div class="bg-dark-600 border border-dark-50/20 rounded-xl overflow-hidden animate-slide-up" style="animation-delay: 0.5s">
+
+                <!-- Table Tabs & Search -->
+                <div class="px-6 pt-5 pb-0">
+                    <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-5">
+                        <!-- Tabs -->
+                        <div class="flex items-center gap-1 border-b border-dark-50/20">
+                            <a href="{% url 'invoice_list' %}?tab=all"
+                               class="px-4 py-2.5 text-sm font-medium transition-all border-b-2 {% if current_tab == 'all' %}text-white border-gold-500{% else %}text-gray-500 border-transparent hover:text-gray-300{% endif %}">
+                                All Invoices
+                            </a>
+                            <a href="{% url 'invoice_list' %}?tab=pending"
+                               class="px-4 py-2.5 text-sm font-medium transition-all border-b-2 {% if current_tab == 'pending' %}text-white border-gold-500{% else %}text-gray-500 border-transparent hover:text-gray-300{% endif %}">
+                                Pending
+                            </a>
+                            <a href="{% url 'invoice_list' %}?tab=lunas"
+                               class="px-4 py-2.5 text-sm font-medium transition-all border-b-2 {% if current_tab == 'lunas' %}text-white border-gold-500{% else %}text-gray-500 border-transparent hover:text-gray-300{% endif %}">
+                                Lunas
+                            </a>
+                            <a href="{% url 'invoice_list' %}?tab=overdue"
+                               class="px-4 py-2.5 text-sm font-medium transition-all border-b-2 {% if current_tab == 'overdue' %}text-white border-gold-500{% else %}text-gray-500 border-transparent hover:text-gray-300{% endif %}">
+                                Overdue
+                            </a>
+                        </div>
+
+                        <!-- Search & Filter -->
+                        <div class="flex items-center gap-3">
+                            <form method="GET" action="{% url 'invoice_list' %}" class="relative">
+                                <input type="hidden" name="tab" value="{{ current_tab }}">
+                                <svg class="w-4 h-4 text-gray-500 absolute left-3 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                                <input type="text" name="q" value="{{ search_query }}" placeholder="Search invoices or clients..."
+                                       class="bg-dark-400 border border-dark-50/30 rounded-lg pl-10 pr-4 py-2 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-gold-500/50 focus:ring-1 focus:ring-gold-500/20 w-64 transition-all">
+                            </form>
+                            <button class="flex items-center gap-1.5 text-gray-500 hover:text-gray-300 text-sm transition-colors">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"/></svg>
+                                Filter
+                            </button>
+                            <button class="flex items-center gap-1.5 text-gray-500 hover:text-gray-300 text-sm transition-colors">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 4h13M3 8h9m-9 4h6m4 0l4-4m0 0l4 4m-4-4v12"/></svg>
+                                Sort By
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Table -->
+                <div class="overflow-x-auto">
+                    <table class="w-full" id="invoiceTable">
+                        <thead>
+                            <tr class="border-t border-dark-50/20">
+                                <th class="text-left px-6 py-3 text-[11px] tracking-[0.15em] uppercase text-gray-500 font-semibold">Client & Event Date</th>
+                                <th class="text-left px-6 py-3 text-[11px] tracking-[0.15em] uppercase text-gray-500 font-semibold">Total Invoice</th>
+                                <th class="text-left px-6 py-3 text-[11px] tracking-[0.15em] uppercase text-gray-500 font-semibold">Paid Amount</th>
+                                <th class="text-left px-6 py-3 text-[11px] tracking-[0.15em] uppercase text-gray-500 font-semibold">Balance</th>
+                                <th class="text-center px-6 py-3 text-[11px] tracking-[0.15em] uppercase text-gray-500 font-semibold">Status</th>
+                                <th class="text-center px-6 py-3 text-[11px] tracking-[0.15em] uppercase text-gray-500 font-semibold">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for invoice in invoices %}
+                            <tr class="border-t border-dark-50/10 hover:bg-dark-50/5 transition-colors group">
+                                <td class="px-6 py-4">
+                                    <div class="flex items-center gap-3">
+                                        <div class="w-10 h-10 rounded-full border border-gold-500/30 bg-dark-300 flex items-center justify-center text-gold-500 text-xs font-bold flex-shrink-0">
+                                            {{ invoice.client.nama_lengkap|truncatechars:2 }}
+                                        </div>
+                                        <div>
+                                            <p class="text-sm text-white font-medium">{{ invoice.client.nama_lengkap }}</p>
+                                            <p class="text-xs text-gray-500 flex items-center gap-1 mt-0.5">
+                                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                                                {{ invoice.tanggal_dibuat|date:"d M Y" }}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <span class="text-sm text-white tabular-nums">{{ invoice.total_tagihan|rupiah }}</span>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <span class="text-sm text-green-400 tabular-nums">{{ invoice.nominal_terbayar|rupiah }}</span>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <span class="text-sm tabular-nums {% if invoice.status == 'overdue' %}text-red-400{% elif invoice.sisa_tagihan > 0 %}text-yellow-400{% else %}text-white{% endif %}">
+                                        {{ invoice.sisa_tagihan|rupiah }}
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4 text-center">
+                                    <span class="inline-flex px-3 py-1 rounded-full text-[11px] font-semibold uppercase tracking-wider
+                                        {% if invoice.status == 'lunas' %}badge-lunas
+                                        {% elif invoice.status == 'overdue' %}badge-overdue
+                                        {% elif invoice.status == 'dp' %}badge-dp
+                                        {% elif invoice.status == 'proses' %}badge-proses
+                                        {% else %}badge-menunggu{% endif %}">
+                                        {{ invoice.get_status_display }}
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4 text-center">
+                                    <div class="flex items-center justify-center gap-2">
+                                        <a href="{% url 'admin_invoice' invoice.nomor_invoice %}" class="text-gray-500 hover:text-gold-500 transition-colors" title="Manage Invoice">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                                        </a>
+                                        <button class="text-gray-500 hover:text-gray-300 transition-colors">
+                                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z"/></svg>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="6" class="px-6 py-16 text-center">
+                                    <div class="flex flex-col items-center">
+                                        <svg class="w-16 h-16 text-dark-50 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="0.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                                        <p class="text-gray-500 text-sm">Belum ada invoice.</p>
+                                        <a href="{% url 'create_invoice' %}" class="mt-4 text-gold-500 hover:text-gold-400 text-sm font-medium transition-colors">
+                                            + Buat Invoice Pertama
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Table Footer -->
+                {% if invoices %}
+                <div class="px-6 py-4 border-t border-dark-50/20 flex items-center justify-between">
+                    <p class="text-xs text-gray-500">Showing {{ invoices|length }} entries</p>
+                    <div class="flex items-center gap-1">
+                        <button class="w-8 h-8 rounded-lg flex items-center justify-center text-gray-500 hover:bg-dark-50/20 transition-colors text-sm">&lt;</button>
+                        <button class="w-8 h-8 rounded-lg flex items-center justify-center bg-gold-500 text-dark-900 font-bold text-sm">1</button>
+                        <button class="w-8 h-8 rounded-lg flex items-center justify-center text-gray-500 hover:bg-dark-50/20 transition-colors text-sm">&gt;</button>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </main>
+</div>
+
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+    // Set current date
+    const dateEl = document.getElementById('currentDate');
+    if (dateEl) {
+        const now = new Date();
+        const options = { year: 'numeric', month: 'short', day: 'numeric' };
+        dateEl.textContent = now.toLocaleDateString('id-ID', options);
+    }
+
+    // Animate numbers on load
+    document.querySelectorAll('.tabular-nums').forEach(el => {
+        el.style.opacity = '0';
+        el.style.transform = 'translateY(10px)';
+        setTimeout(() => {
+            el.style.transition = 'all 0.6s cubic-bezier(0.4, 0, 0.2, 1)';
+            el.style.opacity = '1';
+            el.style.transform = 'translateY(0)';
+        }, 300);
+    });
+</script>
+{% endblock %}

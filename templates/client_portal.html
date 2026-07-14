@@ -1,0 +1,383 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load rupiah_filter %}
+{% block title %}Invoice {{ invoice.nomor_invoice }} — Berkat WO{% endblock %}
+
+{% block content %}
+<div class="min-h-screen">
+
+    <!-- ===================== NAVBAR ===================== -->
+    <nav class="bg-dark-800/90 backdrop-blur-xl border-b border-dark-50/20 px-8 py-4 sticky top-0 z-30">
+            <div class="flex items-center gap-3 py-1">
+                <img src="{% static 'images/logo.png' %}" alt="Berkat WO Logo" class="w-12 h-12 object-contain drop-shadow-2xl scale-125">
+                <div>
+                    <h1 class="text-white font-display font-bold text-xl tracking-wide">BERKAT</h1>
+                    <p class="text-gray-500 text-[10px] tracking-widest uppercase">Wedding Organizer & Planner Solo</p>
+                </div>
+            </div>
+    </nav>
+
+    <div class="max-w-7xl mx-auto px-8 py-10">
+
+        <!-- Page Header -->
+        <div class="mb-10 animate-fade-in">
+            <h2 class="text-4xl font-display font-bold text-white mb-3">Payment Overview</h2>
+            <p class="text-gray-500 text-sm">Manage your client invoice and track vendor settlements in one place.</p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-5 gap-8">
+
+            <!-- ===================== LEFT: INVOICE CARD ===================== -->
+            <div class="lg:col-span-3 space-y-6">
+
+                <!-- Main Invoice Card -->
+                <div class="bg-dark-600 border-glow-gold rounded-2xl p-8 animate-slide-up relative overflow-hidden">
+                    <!-- Decorative corner -->
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl from-gold-500/5 to-transparent rounded-bl-full"></div>
+
+                    <!-- Header -->
+                    <div class="flex items-start justify-between mb-6 relative">
+                        <div>
+                            <h3 class="text-2xl font-display font-bold text-white">{{ client.nama_lengkap }}</h3>
+                            <p class="text-gray-400 text-sm mt-1 tracking-wide">INVOICE #{{ invoice.nomor_invoice }}</p>
+                        </div>
+                        <div class="text-right">
+                            <p class="text-gray-500 text-xs uppercase tracking-wider">Date Issued</p>
+                            <p class="text-white text-sm font-medium mt-1">{{ invoice.tanggal_dibuat|date:"d M Y" }}</p>
+                        </div>
+                    </div>
+
+                    <hr class="border-dark-50/20 mb-6">
+
+                    <!-- Total Contract -->
+                    <div class="mb-6">
+                        <p class="text-gray-500 text-xs uppercase tracking-wider mb-1">Total Contract Amount</p>
+                        <p class="text-3xl font-bold text-white tabular-nums">{{ invoice.total_tagihan|rupiah }}</p>
+                    </div>
+
+                    <!-- Amount to Pay highlight -->
+                    <div class="bg-dark-400/50 border-l-4 border-gold-500 rounded-r-xl p-6 mb-8">
+                        <p class="text-gold-500 text-xs uppercase tracking-wider font-semibold mb-2">
+                            {% if invoice.status == 'menunggu' %}Amount to Pay (DP)
+                            {% elif invoice.status == 'dp' %}Remaining Balance
+                            {% elif invoice.status == 'lunas' %}Fully Paid
+                            {% else %}Outstanding Amount
+                            {% endif %}
+                        </p>
+                        <p class="text-4xl font-bold text-gold-400 tabular-nums">{{ invoice.sisa_tagihan|rupiah }}</p>
+                    </div>
+
+                    <!-- Status Badge -->
+                    <div class="flex items-center gap-3 mb-8">
+                        <span class="text-gray-500 text-sm">Status:</span>
+                        <span class="inline-flex px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider
+                            {% if invoice.status == 'lunas' %}badge-lunas
+                            {% elif invoice.status == 'overdue' %}badge-overdue
+                            {% elif invoice.status == 'dp' %}badge-dp
+                            {% elif invoice.status == 'proses' %}badge-proses
+                            {% else %}badge-menunggu{% endif %}">
+                            {{ invoice.get_status_display }}
+                        </span>
+                    </div>
+
+                    <!-- Pay Now Button -->
+                    {% if invoice.status != 'lunas' %}
+                    <button id="payNowBtn" class="w-full bg-gold-500 hover:bg-gold-600 text-dark-900 font-bold text-lg py-4 rounded-xl transition-all hover:shadow-xl hover:shadow-gold-500/20 flex items-center justify-center gap-3 animate-pulse-gold">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+                        Pay Now
+                    </button>
+                    {% else %}
+                    <div class="w-full bg-green-500/10 border border-green-500/30 text-green-400 font-bold text-lg py-4 rounded-xl flex items-center justify-center gap-3">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                        Payment Complete
+                    </div>
+                    {% endif %}
+
+                    <p class="text-center text-gray-600 text-[11px] mt-4">Secure payment powered by Berkat Pay</p>
+                </div>
+
+                <!-- Client & Package Details -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                    <!-- Client Info -->
+                    <div class="bg-dark-600 border border-dark-50/20 rounded-xl p-6 animate-slide-up" style="animation-delay: 0.2s">
+                        <h4 class="text-gold-500 text-xs font-semibold uppercase tracking-widest mb-4 flex items-center gap-2">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+                            Informasi Pelanggan
+                        </h4>
+                        <div class="space-y-3">
+                            <div>
+                                <p class="text-gray-500 text-[10px] uppercase tracking-wider">Customer ID</p>
+                                <p class="text-white text-sm font-medium">{{ client.customer_id }}</p>
+                            </div>
+                            <div>
+                                <p class="text-gray-500 text-[10px] uppercase tracking-wider">Nama Lengkap</p>
+                                <p class="text-white text-sm font-medium">{{ client.nama_lengkap }}</p>
+                            </div>
+                            <div>
+                                <p class="text-gray-500 text-[10px] uppercase tracking-wider">WhatsApp</p>
+                                <p class="text-white text-sm font-medium">{{ client.nomor_wa }}</p>
+                            </div>
+                            {% if client.email %}
+                            <div>
+                                <p class="text-gray-500 text-[10px] uppercase tracking-wider">Email</p>
+                                <p class="text-white text-sm font-medium">{{ client.email }}</p>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <!-- Payment Info -->
+                    <div class="bg-dark-600 border border-dark-50/20 rounded-xl p-6 animate-slide-up" style="animation-delay: 0.3s">
+                        <h4 class="text-gold-500 text-xs font-semibold uppercase tracking-widest mb-4 flex items-center gap-2">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg>
+                            Detail Pembayaran
+                        </h4>
+                        <div class="space-y-3">
+                            <div>
+                                <p class="text-gray-500 text-[10px] uppercase tracking-wider">Total Tagihan</p>
+                                <p class="text-white text-sm font-medium tabular-nums">{{ invoice.total_tagihan|rupiah }}</p>
+                            </div>
+                            <div>
+                                <p class="text-gray-500 text-[10px] uppercase tracking-wider">Terbayar</p>
+                                <p class="text-green-400 text-sm font-medium tabular-nums">{{ invoice.nominal_terbayar|rupiah }}</p>
+                            </div>
+                            <div>
+                                <p class="text-gray-500 text-[10px] uppercase tracking-wider">Sisa Tagihan</p>
+                                <p class="text-gold-400 text-sm font-bold tabular-nums">{{ invoice.sisa_tagihan|rupiah }}</p>
+                            </div>
+                            {% if package %}
+                            <div>
+                                <p class="text-gray-500 text-[10px] uppercase tracking-wider">Paket</p>
+                                <p class="text-white text-sm font-medium">{{ package.nama_paket }}</p>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===================== RIGHT: VENDOR MONITORING ===================== -->
+            <div class="lg:col-span-2 animate-slide-up" style="animation-delay: 0.4s">
+                <div class="bg-dark-600 border border-dark-50/20 rounded-2xl p-7 sticky top-24">
+                    <div class="flex items-center justify-between mb-2">
+                        <h3 class="text-xl font-display font-bold text-white">Vendor Monitoring</h3>
+                        <svg class="w-5 h-5 text-gold-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/></svg>
+                    </div>
+                    <p class="text-gray-500 text-sm mb-7">Live status of payments distributed to your wedding vendors.</p>
+
+                    {% if vendors %}
+                    <div class="space-y-4">
+                        {% for vendor in vendors %}
+                        <div class="bg-dark-400/30 border border-dark-50/15 rounded-xl p-5 card-hover flex items-center gap-4">
+                            <!-- Vendor Icon -->
+                            <div class="w-10 h-10 rounded-lg bg-dark-300 border border-dark-50/20 flex items-center justify-center flex-shrink-0">
+                                {% if 'venue' in vendor.nama_vendor|lower or 'gedung' in vendor.nama_vendor|lower %}
+                                <svg class="w-5 h-5 text-gold-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+                                {% elif 'katering' in vendor.nama_vendor|lower or 'catering' in vendor.nama_vendor|lower %}
+                                <svg class="w-5 h-5 text-gold-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                {% elif 'mua' in vendor.nama_vendor|lower or 'makeup' in vendor.nama_vendor|lower %}
+                                <svg class="w-5 h-5 text-gold-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/></svg>
+                                {% else %}
+                                <svg class="w-5 h-5 text-gold-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+                                {% endif %}
+                            </div>
+
+                            <!-- Vendor Info -->
+                            <div class="flex-1 min-w-0">
+                                <div class="flex items-center gap-2">
+                                    <p class="text-white text-sm font-semibold">{{ vendor.nama_vendor }}</p>
+                                    <span class="text-[9px] px-2 py-0.5 rounded-full font-medium
+                                        {% if vendor.status_pembayaran == 'selesai' %}badge-lunas
+                                        {% elif vendor.status_pembayaran == 'proses' %}badge-proses
+                                        {% else %}badge-pending{% endif %}">
+                                        {{ vendor.get_status_pembayaran_display }}
+                                    </span>
+                                </div>
+                                <p class="text-gray-500 text-xs mt-0.5">
+                                    {% if vendor.status_pembayaran == 'selesai' %}Vendor telah selesai
+                                    {% elif vendor.status_pembayaran == 'proses' %}Sedang dalam proses
+                                    {% else %}Menunggu progress
+                                    {% endif %}
+                                </p>
+                            </div>
+
+                            <!-- Progress Ring + Percentage -->
+                            <div class="flex-shrink-0 flex items-center gap-2">
+                                {% if vendor.progress_persen >= 100 %}
+                                <div class="w-12 h-12 rounded-full border-2 border-green-500 flex items-center justify-center">
+                                    <svg class="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                                </div>
+                                <span class="text-green-400 text-xs font-bold tabular-nums w-10 text-right">100%</span>
+                                {% else %}
+                                <div class="w-12 h-12 relative">
+                                    <!-- circumference = 2 * PI * 16 = 100.53 -->
+                                    {% with persen=vendor.progress_persen %}
+                                    <svg class="w-12 h-12 progress-ring" viewBox="0 0 40 40">
+                                        <circle cx="20" cy="20" r="16" stroke="#333" stroke-width="3" fill="none"/>
+                                        <circle cx="20" cy="20" r="16"
+                                                stroke="{% if persen > 0 %}#D4AF37{% else %}#555{% endif %}"
+                                                stroke-width="3" fill="none" stroke-linecap="round"
+                                                stroke-dasharray="100.53"
+                                                style="stroke-dashoffset: calc(100.53 * (1 - {{ persen }} / 100)); transition: stroke-dashoffset 1s ease-out;"/>
+                                    </svg>
+                                    {% endwith %}
+                                </div>
+                                <span class="text-xs font-bold tabular-nums w-10 text-right {% if vendor.progress_persen > 0 %}text-gold-400{% else %}text-gray-500{% endif %}">{{ vendor.progress_persen }}%</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <div class="text-center py-8">
+                        <svg class="w-12 h-12 text-dark-50 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="0.5" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5"/></svg>
+                        <p class="text-gray-600 text-sm">No vendors tracked yet.</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ===================== PAY NOW MODAL ===================== -->
+<div id="payModal" class="fixed inset-0 z-50 hidden">
+    <div class="modal-overlay absolute inset-0" id="modalOverlay"></div>
+    <div class="relative flex items-center justify-center min-h-screen p-4">
+        <div class="bg-dark-600 border border-gold-500/30 rounded-2xl w-full max-w-md p-8 relative animate-slide-up shadow-2xl shadow-black/50">
+
+            <!-- Close Button -->
+            <button id="closeModal" class="absolute top-4 right-4 text-gray-500 hover:text-white transition-colors">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+            </button>
+
+            <!-- Modal Header -->
+            <div class="text-center mb-7">
+                <div class="w-16 h-16 rounded-full bg-gold-500/10 border border-gold-500/30 flex items-center justify-center mx-auto mb-4">
+                    <svg class="w-8 h-8 text-gold-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg>
+                </div>
+                <h3 class="text-xl font-display font-bold text-white">Transfer Pembayaran</h3>
+                <p class="text-gray-500 text-sm mt-1">Silakan transfer ke rekening berikut</p>
+            </div>
+
+            <!-- Billing Summary -->
+            <div class="bg-dark-500/50 border border-dark-50/20 rounded-xl p-5 mb-4 space-y-4">
+                <div>
+                    <p class="text-gray-500 text-[10px] uppercase tracking-wider mb-1">Total Keseluruhan</p>
+                    <p class="text-white text-lg font-bold tabular-nums">{{ invoice.total_tagihan|rupiah }}</p>
+                </div>
+                
+                <div class="pt-3 border-t border-dark-50/20">
+                    <p class="text-gray-500 text-[10px] uppercase tracking-wider mb-2">Rincian Tagihan</p>
+                    <div class="space-y-2">
+                        {% if invoice.package %}
+                        <div class="flex justify-between items-start gap-4">
+                            <div>
+                                <p class="text-white text-sm font-medium">Paket: {{ invoice.package.nama_paket }}</p>
+                                <p class="text-gray-500 text-xs mt-1">{{ invoice.package.isi_paket|truncatechars:100 }}</p>
+                            </div>
+                        </div>
+                        {% endif %}
+                        <div class="flex justify-between items-start gap-4 mt-2">
+                            <div>
+                                <p class="text-white text-sm font-medium">Layanan Vendor</p>
+                                <p class="text-gray-500 text-xs mt-1">Biaya tambahan layanan vendor (jika ada)</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bank Info -->
+            <div class="bg-dark-400/50 border border-dark-50/20 rounded-xl p-5 mb-6">
+                <div class="flex items-center gap-3 mb-4">
+                    <div class="w-12 h-7 bg-white rounded flex items-center justify-center">
+                        <span class="text-blue-800 font-bold text-xs tracking-wider">BANK</span>
+                    </div>
+                    <div>
+                        <p class="text-white text-sm font-semibold">{{ invoice.bank_name|default:settings.nama_bank }}</p>
+                        <p class="text-gray-500 text-xs">Transfer Bank</p>
+                    </div>
+                </div>
+
+                <div class="space-y-3">
+                    <div>
+                        <p class="text-gray-500 text-[10px] uppercase tracking-wider">Nomor Rekening</p>
+                        <div class="flex items-center justify-between mt-1">
+                            <p class="text-white text-lg font-bold tabular-nums tracking-wider" id="bankAccount">{{ invoice.bank_account|default:settings.nomor_rekening }}</p>
+                            <button onclick="copyToClipboard('{{ invoice.bank_account|default:settings.nomor_rekening }}')" class="text-gold-500 hover:text-gold-400 transition-colors" title="Copy">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
+                            </button>
+                        </div>
+                    </div>
+                    <div>
+                        <p class="text-gray-500 text-[10px] uppercase tracking-wider">Atas Nama</p>
+                        <p class="text-white text-sm font-medium mt-1">{{ invoice.bank_account_name|default:settings.atas_nama_rekening }}</p>
+                    </div>
+                    <div class="pt-3 border-t border-dark-50/20">
+                        <p class="text-gray-500 text-[10px] uppercase tracking-wider">Biaya Yang Kurang Dibayarkan</p>
+                        <p class="text-gold-400 text-2xl font-bold mt-1 tabular-nums">{{ invoice.sisa_tagihan|rupiah }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Important Note -->
+            <div class="bg-gold-500/5 border border-gold-500/20 rounded-lg p-3 mb-6">
+                <p class="text-gold-500/80 text-xs leading-relaxed">
+                    <span class="font-semibold">Penting:</span> Setelah melakukan transfer, silakan konfirmasi pembayaran melalui WhatsApp dengan menyertakan bukti transfer.
+                </p>
+            </div>
+
+            <!-- WhatsApp CTA -->
+            <a href="{{ wa_link }}" target="_blank" rel="noopener noreferrer"
+               class="w-full bg-green-600 hover:bg-green-500 text-white font-bold text-sm py-4 rounded-xl transition-all flex items-center justify-center gap-3 hover:shadow-lg hover:shadow-green-600/20">
+                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+                Konfirmasi via WhatsApp
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+    // Modal logic
+    const payBtn = document.getElementById('payNowBtn');
+    const modal = document.getElementById('payModal');
+    const closeBtn = document.getElementById('closeModal');
+    const overlay = document.getElementById('modalOverlay');
+
+    if (payBtn) {
+        payBtn.addEventListener('click', () => {
+            modal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        });
+    }
+
+    function closeModal() {
+        modal.classList.add('hidden');
+        document.body.style.overflow = '';
+    }
+
+    if (closeBtn) closeBtn.addEventListener('click', closeModal);
+    if (overlay) overlay.addEventListener('click', closeModal);
+
+    // ESC key
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && !modal.classList.contains('hidden')) {
+            closeModal();
+        }
+    });
+
+    // Copy to clipboard
+    function copyToClipboard(text) {
+        navigator.clipboard.writeText(text).then(() => {
+            // Show feedback
+            const btn = event.currentTarget;
+            const originalHTML = btn.innerHTML;
+            btn.innerHTML = '<svg class="w-4 h-4 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>';
+            setTimeout(() => { btn.innerHTML = originalHTML; }, 1500);
+        });
+    }
+</script>
+{% endblock %}

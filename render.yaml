@@ -1,0 +1,22 @@
+databases:
+  - name: berkatwo-db
+    databaseName: berkatwo
+    user: berkatwo
+
+services:
+  - type: web
+    name: berkatwo-web
+    env: python
+    buildCommand: "./build.sh"
+    startCommand: "gunicorn berkat_wo.wsgi:application"
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: berkatwo-db
+          property: connectionString
+      - key: SECRET_KEY
+        generateValue: true
+      - key: WEB_CONCURRENCY
+        value: 4
+      - key: RENDER_EXTERNAL_HOSTNAME
+        sync: false
