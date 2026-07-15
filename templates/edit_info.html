@@ -4,31 +4,31 @@
 {% block title %}Edit Info — Berkat WO{% endblock %}
 
 {% block content %}
-<div class="flex min-h-screen bg-dark-900">
+<div class="flex min-h-screen bg-gray-50 dark:bg-dark-900">
 
     <!-- ===================== SIDEBAR ===================== -->
-    <aside class="w-64 bg-dark-800 border-r border-dark-50/30 flex flex-col justify-between fixed h-full z-30">
+    <aside class="w-64 bg-white dark:bg-dark-800 border-r border-gray-200 dark:border-dark-50/30 flex flex-col justify-between fixed h-full z-30">
         <!-- Logo -->
         <div>
-            <div class="px-6 py-6 border-b border-dark-50/20">
+            <div class="px-6 py-6 border-b border-gray-200 dark:border-dark-50/20">
                 <div class="flex items-center gap-3 py-2 w-full">
                     <a href="{% url 'dashboard' %}">
                         <img src="{% static 'images/logo.png' %}" alt="Berkat WO Logo" class="w-12 h-12 object-contain drop-shadow-2xl scale-125 hover:scale-150 transition-transform">
                     </a>
                     <div class="hidden md:block">
-                        <h1 class="text-white font-display font-bold text-lg tracking-wide">BERKAT</h1>
-                        <p class="text-gray-500 text-[10px] tracking-widest uppercase leading-tight">Wedding Organizer<br>& Planner Solo</p>
+                        <h1 class="text-gray-900 dark:text-white font-display font-bold text-lg tracking-wide">BERKAT</h1>
+                        <p class="text-gray-600 dark:text-gray-500 text-[10px] tracking-widest uppercase leading-tight">Wedding Organizer<br>& Planner Solo</p>
                     </div>
                 </div>
             </div>
 
             <!-- Nav Links -->
             <nav class="px-4 py-6 space-y-1">
-                <a href="{% url 'dashboard' %}" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-400 hover:bg-dark-50/20 hover:text-white transition-all">
+                <a href="{% url 'dashboard' %}" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-600 dark:text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:bg-dark-50/20 hover:text-gray-900 dark:text-white transition-all">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
                     <span class="text-sm">Dashboard</span>
                 </a>
-                <a href="{% url 'invoice_list' %}" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-400 hover:bg-dark-50/20 hover:text-white transition-all">
+                <a href="{% url 'invoice_list' %}" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-600 dark:text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:bg-dark-50/20 hover:text-gray-900 dark:text-white transition-all">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
                     <span class="text-sm">Invoices</span>
                 </a>
@@ -46,18 +46,25 @@
         <!-- Header -->
         <div class="flex items-center justify-between mb-8 animate-fade-in">
             <div>
-                <h2 class="text-2xl font-display font-bold text-white tracking-wide">Edit Info & Default</h2>
-                <p class="text-gray-500 text-sm mt-1">Atur data default bisnis dan kelola daftar paket Anda.</p>
+                <h2 class="text-2xl font-display font-bold text-gray-900 dark:text-white tracking-wide">Edit Info & Default</h2>
+                <p class="text-gray-600 dark:text-gray-500 text-sm mt-1">Atur data default bisnis dan kelola daftar paket Anda.</p>
+            </div>
+            <div>
+                <button id="darkModeToggle" class="flex items-center gap-2 text-gray-600 dark:text-gray-500 hover:text-gray-900 dark:text-white transition-colors text-sm px-3 py-1.5 border border-gray-200 dark:border-dark-50/30 rounded-lg">
+                    <svg class="w-4 h-4 hidden dark:block text-gold-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                    <svg class="w-4 h-4 block dark:hidden text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+                    <span class="theme-text">Dark Mode</span>
+                </button>
             </div>
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
             
             <!-- BUSINESS SETTINGS -->
-            <div class="bg-dark-600 border border-dark-50/20 rounded-2xl p-6 animate-slide-up">
+            <div class="bg-white dark:bg-dark-600 border border-gray-200 dark:border-dark-50/20 rounded-2xl p-6 animate-slide-up">
                 <div class="flex items-center gap-2 mb-6">
                     <div class="w-1.5 h-6 bg-gold-500 rounded-full"></div>
-                    <h3 class="text-lg font-display font-bold text-white">Business Settings</h3>
+                    <h3 class="text-lg font-display font-bold text-gray-900 dark:text-white">Business Settings</h3>
                 </div>
 
                 <form method="POST" action="{% url 'edit_info' %}">
@@ -66,55 +73,55 @@
                     
                     <div class="space-y-5">
                         <div>
-                            <label class="block text-gray-500 text-[10px] uppercase tracking-wider mb-1.5">Nama Bisnis</label>
+                            <label class="block text-gray-600 dark:text-gray-500 text-[10px] uppercase tracking-wider mb-1.5">Nama Bisnis</label>
                             <input type="text" name="nama_bisnis" value="{{ settings.nama_bisnis }}" required
-                                   class="w-full bg-dark-400 border border-dark-50/20 rounded-lg px-4 py-2.5 text-white text-sm focus:outline-none focus:border-gold-500/50 focus:ring-1 focus:ring-gold-500/20 transition-all">
+                                   class="w-full bg-gray-100 dark:bg-dark-400 border border-gray-200 dark:border-dark-50/20 rounded-lg px-4 py-2.5 text-gray-900 dark:text-white text-sm focus:outline-none focus:border-gold-500/50 focus:ring-1 focus:ring-gold-500/20 transition-all">
                         </div>
 
                         <div>
-                            <label class="block text-gray-500 text-[10px] uppercase tracking-wider mb-1.5">Email Bisnis</label>
+                            <label class="block text-gray-600 dark:text-gray-500 text-[10px] uppercase tracking-wider mb-1.5">Email Bisnis</label>
                             <input type="email" name="email_bisnis" value="{{ settings.email_bisnis }}" required
-                                   class="w-full bg-dark-400 border border-dark-50/20 rounded-lg px-4 py-2.5 text-white text-sm focus:outline-none focus:border-gold-500/50 focus:ring-1 focus:ring-gold-500/20 transition-all">
+                                   class="w-full bg-gray-100 dark:bg-dark-400 border border-gray-200 dark:border-dark-50/20 rounded-lg px-4 py-2.5 text-gray-900 dark:text-white text-sm focus:outline-none focus:border-gold-500/50 focus:ring-1 focus:ring-gold-500/20 transition-all">
                         </div>
 
                         <div>
-                            <label class="block text-gray-500 text-[10px] uppercase tracking-wider mb-1.5">Lokasi</label>
+                            <label class="block text-gray-600 dark:text-gray-500 text-[10px] uppercase tracking-wider mb-1.5">Lokasi</label>
                             <textarea name="lokasi" required rows="3"
-                                      class="w-full bg-dark-400 border border-dark-50/20 rounded-lg px-4 py-2.5 text-white text-sm focus:outline-none focus:border-gold-500/50 focus:ring-1 focus:ring-gold-500/20 transition-all">{{ settings.lokasi }}</textarea>
+                                      class="w-full bg-gray-100 dark:bg-dark-400 border border-gray-200 dark:border-dark-50/20 rounded-lg px-4 py-2.5 text-gray-900 dark:text-white text-sm focus:outline-none focus:border-gold-500/50 focus:ring-1 focus:ring-gold-500/20 transition-all">{{ settings.lokasi }}</textarea>
                         </div>
                         
                         <div>
-                            <label class="block text-gray-500 text-[10px] uppercase tracking-wider mb-1.5">Terms and Conditions (Cetak PDF)</label>
+                            <label class="block text-gray-600 dark:text-gray-500 text-[10px] uppercase tracking-wider mb-1.5">Terms and Conditions (Cetak PDF)</label>
                             <textarea name="terms_and_conditions" required rows="6"
-                                      class="w-full bg-dark-400 border border-dark-50/20 rounded-lg px-4 py-2.5 text-white text-sm focus:outline-none focus:border-gold-500/50 focus:ring-1 focus:ring-gold-500/20 transition-all">{{ settings.terms_and_conditions }}</textarea>
-                            <p class="text-[10px] text-gray-500 mt-1">Setiap baris baru akan menjadi poin terpisah di invoice PDF.</p>
+                                      class="w-full bg-gray-100 dark:bg-dark-400 border border-gray-200 dark:border-dark-50/20 rounded-lg px-4 py-2.5 text-gray-900 dark:text-white text-sm focus:outline-none focus:border-gold-500/50 focus:ring-1 focus:ring-gold-500/20 transition-all">{{ settings.terms_and_conditions }}</textarea>
+                            <p class="text-[10px] text-gray-600 dark:text-gray-500 mt-1">Setiap baris baru akan menjadi poin terpisah di invoice PDF.</p>
                         </div>
                         
-                        <div class="bg-dark-800/50 rounded-xl p-4 border border-dark-50/10">
+                        <div class="bg-white dark:bg-dark-800/50 rounded-xl p-4 border border-gray-100 dark:border-gray-200 dark:border-dark-50/10">
                             <h4 class="text-xs font-semibold text-gold-500 uppercase tracking-widest mb-4">Informasi Rekening Default</h4>
                             <div class="space-y-4">
                                 <div>
-                                    <label class="block text-gray-500 text-[10px] uppercase tracking-wider mb-1.5">Nama Bank</label>
+                                    <label class="block text-gray-600 dark:text-gray-500 text-[10px] uppercase tracking-wider mb-1.5">Nama Bank</label>
                                     <input type="text" name="nama_bank" value="{{ settings.nama_bank }}" required
-                                           class="w-full bg-dark-400 border border-dark-50/20 rounded-lg px-4 py-2.5 text-white text-sm focus:outline-none focus:border-gold-500/50 focus:ring-1 focus:ring-gold-500/20 transition-all">
+                                           class="w-full bg-gray-100 dark:bg-dark-400 border border-gray-200 dark:border-dark-50/20 rounded-lg px-4 py-2.5 text-gray-900 dark:text-white text-sm focus:outline-none focus:border-gold-500/50 focus:ring-1 focus:ring-gold-500/20 transition-all">
                                 </div>
                                 <div>
-                                    <label class="block text-gray-500 text-[10px] uppercase tracking-wider mb-1.5">Nomor Rekening</label>
+                                    <label class="block text-gray-600 dark:text-gray-500 text-[10px] uppercase tracking-wider mb-1.5">Nomor Rekening</label>
                                     <input type="text" name="nomor_rekening" value="{{ settings.nomor_rekening }}" required
-                                           class="w-full bg-dark-400 border border-dark-50/20 rounded-lg px-4 py-2.5 text-white text-sm tabular-nums focus:outline-none focus:border-gold-500/50 focus:ring-1 focus:ring-gold-500/20 transition-all">
+                                           class="w-full bg-gray-100 dark:bg-dark-400 border border-gray-200 dark:border-dark-50/20 rounded-lg px-4 py-2.5 text-gray-900 dark:text-white text-sm tabular-nums focus:outline-none focus:border-gold-500/50 focus:ring-1 focus:ring-gold-500/20 transition-all">
                                 </div>
                                 <div>
-                                    <label class="block text-gray-500 text-[10px] uppercase tracking-wider mb-1.5">Atas Nama Rekening</label>
+                                    <label class="block text-gray-600 dark:text-gray-500 text-[10px] uppercase tracking-wider mb-1.5">Atas Nama Rekening</label>
                                     <input type="text" name="atas_nama_rekening" value="{{ settings.atas_nama_rekening }}" required
-                                           class="w-full bg-dark-400 border border-dark-50/20 rounded-lg px-4 py-2.5 text-white text-sm focus:outline-none focus:border-gold-500/50 focus:ring-1 focus:ring-gold-500/20 transition-all">
+                                           class="w-full bg-gray-100 dark:bg-dark-400 border border-gray-200 dark:border-dark-50/20 rounded-lg px-4 py-2.5 text-gray-900 dark:text-white text-sm focus:outline-none focus:border-gold-500/50 focus:ring-1 focus:ring-gold-500/20 transition-all">
                                 </div>
                             </div>
                         </div>
 
                         <div>
-                            <label class="block text-gray-500 text-[10px] uppercase tracking-wider mb-1.5">Nomor WhatsApp Konfirmasi</label>
+                            <label class="block text-gray-600 dark:text-gray-500 text-[10px] uppercase tracking-wider mb-1.5">Nomor WhatsApp Konfirmasi</label>
                             <input type="text" name="nomor_wa_konfirmasi" value="{{ settings.nomor_wa_konfirmasi }}" required
-                                   class="w-full bg-dark-400 border border-dark-50/20 rounded-lg px-4 py-2.5 text-white text-sm tabular-nums focus:outline-none focus:border-gold-500/50 focus:ring-1 focus:ring-gold-500/20 transition-all">
+                                   class="w-full bg-gray-100 dark:bg-dark-400 border border-gray-200 dark:border-dark-50/20 rounded-lg px-4 py-2.5 text-gray-900 dark:text-white text-sm tabular-nums focus:outline-none focus:border-gold-500/50 focus:ring-1 focus:ring-gold-500/20 transition-all">
                         </div>
 
                         <div class="pt-4 flex justify-end">
@@ -127,11 +134,11 @@
             </div>
 
             <!-- PACKAGE MANAGEMENT -->
-            <div class="bg-dark-600 border border-dark-50/20 rounded-2xl p-6 animate-slide-up" style="animation-delay: 0.1s">
+            <div class="bg-white dark:bg-dark-600 border border-gray-200 dark:border-dark-50/20 rounded-2xl p-6 animate-slide-up" style="animation-delay: 0.1s">
                 <div class="flex items-center justify-between mb-6">
                     <div class="flex items-center gap-2">
                         <div class="w-1.5 h-6 bg-gold-500 rounded-full"></div>
-                        <h3 class="text-lg font-display font-bold text-white">Manajemen Paket</h3>
+                        <h3 class="text-lg font-display font-bold text-gray-900 dark:text-white">Manajemen Paket</h3>
                     </div>
                     <button onclick="openAddPackageModal()" class="text-gold-500 hover:text-gold-400 text-sm font-semibold flex items-center gap-1 transition-colors">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
@@ -141,32 +148,32 @@
 
                 <div class="space-y-4">
                     {% for pkg in packages %}
-                    <div class="bg-dark-400 border border-dark-50/10 rounded-xl p-4 card-hover">
+                    <div class="bg-gray-100 dark:bg-dark-400 border border-gray-100 dark:border-gray-200 dark:border-dark-50/10 rounded-xl p-4 card-hover">
                         <div class="flex items-start justify-between">
                             <div>
-                                <h4 class="text-white font-bold text-sm">{{ pkg.nama_paket }}</h4>
+                                <h4 class="text-gray-900 dark:text-white font-bold text-sm">{{ pkg.nama_paket }}</h4>
                                 <p class="text-gold-400 font-semibold tabular-nums text-sm mt-1">{{ pkg.harga_paket|rupiah }}</p>
                             </div>
                             <div class="flex items-center gap-2">
-                                <button onclick="openEditPackageModal({{ pkg.id }}, '{{ pkg.nama_paket|escapejs }}', '{{ pkg.deskripsi|escapejs }}', {{ pkg.harga_paket|floatformat:0 }})" class="text-gray-500 hover:text-white transition-colors" title="Edit">
+                                <button onclick="openEditPackageModal({{ pkg.id }}, '{{ pkg.nama_paket|escapejs }}', '{{ pkg.deskripsi|escapejs }}', {{ pkg.harga_paket|floatformat:0 }})" class="text-gray-600 dark:text-gray-500 hover:text-gray-900 dark:text-white transition-colors" title="Edit">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
                                 </button>
                                 <form method="POST" action="{% url 'edit_info' %}" onsubmit="return confirm('Hapus paket ini?');" class="inline">
                                     {% csrf_token %}
                                     <input type="hidden" name="action" value="delete_package">
                                     <input type="hidden" name="package_id" value="{{ pkg.id }}">
-                                    <button type="submit" class="text-gray-500 hover:text-red-400 transition-colors" title="Hapus">
+                                    <button type="submit" class="text-gray-600 dark:text-gray-500 hover:text-red-400 transition-colors" title="Hapus">
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
                                     </button>
                                 </form>
                             </div>
                         </div>
                         {% if pkg.deskripsi %}
-                        <p class="text-gray-500 text-xs mt-2 line-clamp-2 leading-relaxed">{{ pkg.deskripsi }}</p>
+                        <p class="text-gray-600 dark:text-gray-500 text-xs mt-2 line-clamp-2 leading-relaxed">{{ pkg.deskripsi }}</p>
                         {% endif %}
                     </div>
                     {% empty %}
-                    <div class="text-center py-6 text-gray-500 text-sm">Belum ada paket.</div>
+                    <div class="text-center py-6 text-gray-600 dark:text-gray-500 text-sm">Belum ada paket.</div>
                     {% endfor %}
                 </div>
             </div>
@@ -178,11 +185,11 @@
 <div id="addPackageModal" class="fixed inset-0 z-50 hidden">
     <div class="absolute inset-0 modal-overlay" onclick="closeAddPackageModal()"></div>
     <div class="absolute inset-0 flex items-center justify-center p-4 pointer-events-none">
-        <div class="bg-dark-600 border border-dark-50/20 rounded-2xl w-full max-w-md pointer-events-auto transform scale-95 opacity-0 transition-all duration-300" id="addPackageContent">
+        <div class="bg-white dark:bg-dark-600 border border-gray-200 dark:border-dark-50/20 rounded-2xl w-full max-w-md pointer-events-auto transform scale-95 opacity-0 transition-all duration-300" id="addPackageContent">
             <div class="p-6">
                 <div class="flex items-center justify-between mb-6">
-                    <h3 class="text-xl font-display font-bold text-white">Tambah Paket Baru</h3>
-                    <button onclick="closeAddPackageModal()" class="text-gray-500 hover:text-white transition-colors">
+                    <h3 class="text-xl font-display font-bold text-gray-900 dark:text-white">Tambah Paket Baru</h3>
+                    <button onclick="closeAddPackageModal()" class="text-gray-600 dark:text-gray-500 hover:text-gray-900 dark:text-white transition-colors">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
                     </button>
                 </div>
@@ -191,16 +198,16 @@
                     <input type="hidden" name="action" value="add_package">
                     <div class="space-y-4">
                         <div>
-                            <label class="block text-gray-500 text-[10px] uppercase tracking-wider mb-1.5">Nama Paket</label>
-                            <input type="text" name="nama_paket" required class="w-full bg-dark-400 border border-dark-50/20 rounded-lg px-4 py-2.5 text-white text-sm focus:outline-none focus:border-gold-500/50 transition-all">
+                            <label class="block text-gray-600 dark:text-gray-500 text-[10px] uppercase tracking-wider mb-1.5">Nama Paket</label>
+                            <input type="text" name="nama_paket" required class="w-full bg-gray-100 dark:bg-dark-400 border border-gray-200 dark:border-dark-50/20 rounded-lg px-4 py-2.5 text-gray-900 dark:text-white text-sm focus:outline-none focus:border-gold-500/50 transition-all">
                         </div>
                         <div>
-                            <label class="block text-gray-500 text-[10px] uppercase tracking-wider mb-1.5">Isi/Deskripsi Paket</label>
-                            <textarea name="deskripsi" rows="3" class="w-full bg-dark-400 border border-dark-50/20 rounded-lg px-4 py-2.5 text-white text-sm focus:outline-none focus:border-gold-500/50 transition-all resize-none"></textarea>
+                            <label class="block text-gray-600 dark:text-gray-500 text-[10px] uppercase tracking-wider mb-1.5">Isi/Deskripsi Paket</label>
+                            <textarea name="deskripsi" rows="3" class="w-full bg-gray-100 dark:bg-dark-400 border border-gray-200 dark:border-dark-50/20 rounded-lg px-4 py-2.5 text-gray-900 dark:text-white text-sm focus:outline-none focus:border-gold-500/50 transition-all resize-none"></textarea>
                         </div>
                         <div>
-                            <label class="block text-gray-500 text-[10px] uppercase tracking-wider mb-1.5">Harga Paket (Rp)</label>
-                            <input type="text" class="rupiah-input w-full bg-dark-400 border border-dark-50/20 rounded-lg px-4 py-2.5 text-white text-sm tabular-nums focus:outline-none focus:border-gold-500/50 transition-all" data-name="harga_paket">
+                            <label class="block text-gray-600 dark:text-gray-500 text-[10px] uppercase tracking-wider mb-1.5">Harga Paket (Rp)</label>
+                            <input type="text" class="rupiah-input w-full bg-gray-100 dark:bg-dark-400 border border-gray-200 dark:border-dark-50/20 rounded-lg px-4 py-2.5 text-gray-900 dark:text-white text-sm tabular-nums focus:outline-none focus:border-gold-500/50 transition-all" data-name="harga_paket">
                             <input type="hidden" name="harga_paket" value="0">
                         </div>
                         <button type="submit" class="w-full bg-gold-500 hover:bg-gold-600 text-dark-900 font-bold text-sm py-3 rounded-lg mt-2 transition-all">Simpan Paket</button>
@@ -215,11 +222,11 @@
 <div id="editPackageModal" class="fixed inset-0 z-50 hidden">
     <div class="absolute inset-0 modal-overlay" onclick="closeEditPackageModal()"></div>
     <div class="absolute inset-0 flex items-center justify-center p-4 pointer-events-none">
-        <div class="bg-dark-600 border border-dark-50/20 rounded-2xl w-full max-w-md pointer-events-auto transform scale-95 opacity-0 transition-all duration-300" id="editPackageContent">
+        <div class="bg-white dark:bg-dark-600 border border-gray-200 dark:border-dark-50/20 rounded-2xl w-full max-w-md pointer-events-auto transform scale-95 opacity-0 transition-all duration-300" id="editPackageContent">
             <div class="p-6">
                 <div class="flex items-center justify-between mb-6">
-                    <h3 class="text-xl font-display font-bold text-white">Edit Paket</h3>
-                    <button onclick="closeEditPackageModal()" class="text-gray-500 hover:text-white transition-colors">
+                    <h3 class="text-xl font-display font-bold text-gray-900 dark:text-white">Edit Paket</h3>
+                    <button onclick="closeEditPackageModal()" class="text-gray-600 dark:text-gray-500 hover:text-gray-900 dark:text-white transition-colors">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
                     </button>
                 </div>
@@ -229,16 +236,16 @@
                     <input type="hidden" name="package_id" id="edit_package_id">
                     <div class="space-y-4">
                         <div>
-                            <label class="block text-gray-500 text-[10px] uppercase tracking-wider mb-1.5">Nama Paket</label>
-                            <input type="text" name="nama_paket" id="edit_nama_paket" required class="w-full bg-dark-400 border border-dark-50/20 rounded-lg px-4 py-2.5 text-white text-sm focus:outline-none focus:border-gold-500/50 transition-all">
+                            <label class="block text-gray-600 dark:text-gray-500 text-[10px] uppercase tracking-wider mb-1.5">Nama Paket</label>
+                            <input type="text" name="nama_paket" id="edit_nama_paket" required class="w-full bg-gray-100 dark:bg-dark-400 border border-gray-200 dark:border-dark-50/20 rounded-lg px-4 py-2.5 text-gray-900 dark:text-white text-sm focus:outline-none focus:border-gold-500/50 transition-all">
                         </div>
                         <div>
-                            <label class="block text-gray-500 text-[10px] uppercase tracking-wider mb-1.5">Isi/Deskripsi Paket</label>
-                            <textarea name="deskripsi" id="edit_deskripsi" rows="3" class="w-full bg-dark-400 border border-dark-50/20 rounded-lg px-4 py-2.5 text-white text-sm focus:outline-none focus:border-gold-500/50 transition-all resize-none"></textarea>
+                            <label class="block text-gray-600 dark:text-gray-500 text-[10px] uppercase tracking-wider mb-1.5">Isi/Deskripsi Paket</label>
+                            <textarea name="deskripsi" id="edit_deskripsi" rows="3" class="w-full bg-gray-100 dark:bg-dark-400 border border-gray-200 dark:border-dark-50/20 rounded-lg px-4 py-2.5 text-gray-900 dark:text-white text-sm focus:outline-none focus:border-gold-500/50 transition-all resize-none"></textarea>
                         </div>
                         <div>
-                            <label class="block text-gray-500 text-[10px] uppercase tracking-wider mb-1.5">Harga Paket (Rp)</label>
-                            <input type="text" id="edit_harga_paket_display" class="rupiah-input w-full bg-dark-400 border border-dark-50/20 rounded-lg px-4 py-2.5 text-white text-sm tabular-nums focus:outline-none focus:border-gold-500/50 transition-all" data-name="edit_harga_paket">
+                            <label class="block text-gray-600 dark:text-gray-500 text-[10px] uppercase tracking-wider mb-1.5">Harga Paket (Rp)</label>
+                            <input type="text" id="edit_harga_paket_display" class="rupiah-input w-full bg-gray-100 dark:bg-dark-400 border border-gray-200 dark:border-dark-50/20 rounded-lg px-4 py-2.5 text-gray-900 dark:text-white text-sm tabular-nums focus:outline-none focus:border-gold-500/50 transition-all" data-name="edit_harga_paket">
                             <input type="hidden" name="harga_paket" id="edit_harga_paket_hidden" value="0">
                         </div>
                         <button type="submit" class="w-full bg-gold-500 hover:bg-gold-600 text-dark-900 font-bold text-sm py-3 rounded-lg mt-2 transition-all">Simpan Perubahan</button>

@@ -227,10 +227,10 @@ def print_invoice_view(request, nomor_invoice):
 
 def client_portal_view(request, nomor_invoice):
     """Client portal — detail invoice spesifik untuk klien (read-only)."""
-    invoice = get_object_or_404(
-        Invoice.objects.select_related('client', 'package'),
-        nomor_invoice=nomor_invoice,
-    )
+    try:
+        invoice = Invoice.objects.select_related('client', 'package').get(nomor_invoice=nomor_invoice)
+    except Invoice.DoesNotExist:
+        return render(request, 'invoice_not_found.html', {'nomor_invoice': nomor_invoice}, status=404)
     vendors = invoice.vendors.all()
     settings = BusinessSettings.get_solo()
 

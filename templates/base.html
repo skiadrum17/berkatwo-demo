@@ -10,6 +10,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
+            darkMode: 'class',
             theme: {
                 extend: {
                     colors: {
@@ -73,6 +74,14 @@
                     },
                 },
             },
+        }
+    </script>
+    <script>
+        // Prevent FOUC: apply dark mode immediately before body renders if needed
+        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark')
+        } else {
+            document.documentElement.classList.remove('dark')
         }
     </script>
 
@@ -148,8 +157,40 @@
 
     {% block extra_head %}{% endblock %}
 </head>
-<body class="bg-dark-900 text-white font-sans antialiased min-h-screen">
+<body class="bg-gray-50 dark:bg-dark-900 text-gray-900 dark:text-white font-sans antialiased min-h-screen">
     {% block content %}{% endblock %}
+
+
+
+    <script>
+        const updateThemeUI = (isDark) => {
+            const themeTexts = document.querySelectorAll('.theme-text');
+            themeTexts.forEach(el => {
+                el.textContent = isDark ? 'Light Mode' : 'Dark Mode';
+            });
+        };
+
+        const toggleTheme = () => {
+            if (document.documentElement.classList.contains('dark')) {
+                document.documentElement.classList.remove('dark');
+                localStorage.theme = 'light';
+                updateThemeUI(false);
+            } else {
+                document.documentElement.classList.add('dark');
+                localStorage.theme = 'dark';
+                updateThemeUI(true);
+            }
+        };
+
+        // Set initial text on load
+        updateThemeUI(document.documentElement.classList.contains('dark'));
+
+
+        const navDarkModeToggle = document.getElementById('darkModeToggle');
+        if (navDarkModeToggle) {
+            navDarkModeToggle.addEventListener('click', toggleTheme);
+        }
+    </script>
 
     {% block extra_scripts %}{% endblock %}
 </body>
