@@ -52,6 +52,14 @@ class Package(models.Model):
         return f'{self.nama_paket} - Rp {self.harga_paket:,.0f}'
 
 
+class InvoiceSequence(models.Model):
+    """Model untuk melacak urutan nomor invoice terakhir per tahun agar nomor tidak duplikat saat ada invoice dihapus."""
+    year = models.IntegerField(unique=True)
+    last_number = models.IntegerField(default=0)
+
+    class Meta:
+        verbose_name = 'Invoice Sequence'
+
 class Invoice(models.Model):
     """Model invoice untuk tagihan klien."""
 
@@ -130,15 +138,23 @@ class Invoice(models.Model):
         # Auto-generate nomor_invoice format: INV-YYYY-XXXX
         if not self.nomor_invoice:
             year = timezone.now().year
-            last = Invoice.objects.filter(
-                nomor_invoice__startswith=f'INV-{year}'
-            ).order_by('-nomor_invoice').first()
-            if last:
-                last_num = int(last.nomor_invoice.split('-')[-1])
-                next_num = last_num + 1
-            else:
-                next_num = 1
-            self.nomor_invoice = f'INV-{year}-{next_num:04d}'
+            from django.db import transaction
+            with transaction.atomic():
+                seq, created = InvoiceSequence.objects.select_for_update().get_or_create(year=year)
+                if created:
+                    # Jika sequence baru dibuat, cari invoice terakhir di tahun ini sebagai baseline awal
+                    last = Invoice.objects.filter(
+                        nomor_invoice__startswith=f'INV-{year}'
+                    ).order_by('-nomor_invoice').first()
+                    if last:
+                        try:
+                            seq.last_number = int(last.nomor_invoice.split('-')[-1])
+                        except ValueError:
+                            seq.last_number = 0
+                
+                seq.last_number += 1
+                seq.save()
+                self.nomor_invoice = f'INV-{year}-{seq.last_number:04d}'
 
         # Auto-calculate sisa_tagihan
         self.sisa_tagihan = self.total_tagihan - self.nominal_terbayar

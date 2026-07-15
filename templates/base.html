@@ -77,11 +77,12 @@
         }
     </script>
     <script>
-        // Prevent FOUC: apply dark mode immediately before body renders if needed
         if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-            document.documentElement.classList.add('dark')
+            document.documentElement.classList.add('dark');
+            document.documentElement.style.colorScheme = 'dark';
         } else {
-            document.documentElement.classList.remove('dark')
+            document.documentElement.classList.remove('dark');
+            document.documentElement.style.colorScheme = 'light';
         }
     </script>
 
@@ -173,10 +174,12 @@
         const toggleTheme = () => {
             if (document.documentElement.classList.contains('dark')) {
                 document.documentElement.classList.remove('dark');
+                document.documentElement.style.colorScheme = 'light';
                 localStorage.theme = 'light';
                 updateThemeUI(false);
             } else {
                 document.documentElement.classList.add('dark');
+                document.documentElement.style.colorScheme = 'dark';
                 localStorage.theme = 'dark';
                 updateThemeUI(true);
             }
