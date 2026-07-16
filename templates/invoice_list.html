@@ -46,14 +46,19 @@
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573 1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.066-2.573c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
                 <span class="text-sm">Settings</span>
             </a>
-            <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-600 dark:text-gray-500 hover:text-gray-600 dark:text-gray-300 transition-all">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
-                <span class="text-sm">Support</span>
-            </a>
+            <form method="post" action="{% url 'logout' %}" class="inline w-full">
+                {% csrf_token %}
+                <button type="submit" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-red-500 hover:bg-red-500/10 transition-all">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
+                    <span class="text-sm font-medium">Logout</span>
+                </button>
+            </form>
             <div class="flex items-center gap-3 px-3 py-2.5 mt-3">
-                <div class="w-8 h-8 rounded-full bg-gold-500 flex items-center justify-center text-dark-900 font-bold text-xs">AU</div>
-                <div>
-                    <p class="text-sm text-gray-900 dark:text-white font-medium">Admin User</p>
+                <div class="w-8 h-8 rounded-full bg-gold-500 flex items-center justify-center text-dark-900 font-bold text-xs">
+                    {% if request.user.first_name %}{{ request.user.first_name|make_list|first|upper }}{% else %}{{ request.user.username|make_list|first|upper }}{% endif %}
+                </div>
+                <div class="overflow-hidden">
+                    <p class="text-sm text-gray-900 dark:text-white font-medium truncate">{% if request.user.first_name %}{{ request.user.first_name }} {{ request.user.last_name }}{% else %}{{ request.user.username }}{% endif %}</p>
                     <p class="text-[10px] text-gray-600 dark:text-gray-500">Administrator</p>
                 </div>
             </div>
@@ -73,9 +78,11 @@
                     <span class="theme-text">Dark Mode</span>
                 </button>
                 <div class="flex items-center gap-3 pl-4 border-l border-gray-200 dark:border-dark-50/30">
-                    <div class="w-9 h-9 rounded-full bg-gold-500 flex items-center justify-center text-dark-900 font-bold text-xs">AU</div>
-                    <div class="hidden md:block">
-                        <p class="text-sm text-gray-900 dark:text-white font-medium">Admin User</p>
+                    <div class="w-9 h-9 rounded-full bg-gold-500 flex items-center justify-center text-dark-900 font-bold text-xs">
+                        {% if request.user.first_name %}{{ request.user.first_name|make_list|first|upper }}{% else %}{{ request.user.username|make_list|first|upper }}{% endif %}
+                    </div>
+                    <div class="hidden md:block overflow-hidden max-w-[150px]">
+                        <p class="text-sm text-gray-900 dark:text-white font-medium truncate">{% if request.user.first_name %}{{ request.user.first_name }} {{ request.user.last_name }}{% else %}{{ request.user.username }}{% endif %}</p>
                         <p class="text-[10px] text-gray-600 dark:text-gray-500">Administrator</p>
                     </div>
                 </div>
@@ -86,7 +93,7 @@
 
 
             <!-- Header -->
-            <div class="flex items-center justify-between mb-8 animate-fade-in">
+            <div class="flex items-center justify-between mb-8">
                 <div>
                     <h2 class="text-2xl font-display font-bold text-gray-900 dark:text-white tracking-wide">All Invoices</h2>
                     <p class="text-gray-600 dark:text-gray-500 text-sm mt-1">Kelola seluruh tagihan dan pembayaran klien Anda.</p>
@@ -98,7 +105,7 @@
             </div>
 
             <!-- ===================== INVOICE TABLE ===================== -->
-            <div class="bg-white dark:bg-dark-600 border border-gray-200 dark:border-dark-50/20 rounded-xl overflow-hidden animate-slide-up" style="animation-delay: 0.5s">
+            <div class="bg-white dark:bg-dark-600 border border-gray-200 dark:border-dark-50/20 rounded-xl overflow-hidden">
 
                 <!-- Table Tabs & Search -->
                 <div class="px-6 pt-5 pb-0">
@@ -162,7 +169,7 @@
                                 <td class="px-6 py-4">
                                     <div class="flex items-center gap-3">
                                         <div class="w-10 h-10 rounded-full border border-gold-500/30 bg-gray-200 dark:bg-dark-300 flex items-center justify-center text-gold-500 text-xs font-bold flex-shrink-0">
-                                            {{ invoice.client.nama_lengkap|truncatechars:2 }}
+                                            {{ invoice.client.get_initials }}
                                         </div>
                                         <div>
                                             <p class="text-sm text-gray-900 dark:text-white font-medium">{{ invoice.client.nama_lengkap }}</p>

@@ -1,9 +1,11 @@
 from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib.auth.decorators import login_required
 from django.db.models import Sum, Count, Q
 from django.contrib import messages
 from .models import Client, Package, Invoice, VendorTracker, BusinessSettings
 
 
+@login_required
 def dashboard_view(request):
     """Dashboard admin — metrik keseluruhan dan daftar 5 invoice terbaru."""
     invoices = Invoice.objects.select_related('client', 'package').all()
@@ -43,6 +45,7 @@ def dashboard_view(request):
     return render(request, 'dashboard.html', context)
 
 
+@login_required
 def invoice_list_view(request):
     """View khusus untuk menampilkan seluruh invoice dengan filter dan pencarian."""
     invoices = Invoice.objects.select_related('client', 'package').all()
@@ -73,6 +76,7 @@ def invoice_list_view(request):
     return render(request, 'invoice_list.html', context)
 
 
+@login_required
 def delete_invoice_view(request, nomor_invoice):
     if request.method == 'POST':
         invoice = get_object_or_404(Invoice, nomor_invoice=nomor_invoice)
@@ -81,6 +85,7 @@ def delete_invoice_view(request, nomor_invoice):
     return redirect('invoice_list')
 
 
+@login_required
 def admin_invoice_view(request, nomor_invoice):
     """Admin invoice detail — untuk CRUD invoice oleh admin.
     
@@ -205,6 +210,7 @@ Admin Berkat WO"""
     return render(request, 'admin_invoice.html', context)
 
 
+@login_required
 def print_invoice_view(request, nomor_invoice):
     """View untuk mencetak invoice ke PDF via print window browser."""
     invoice = get_object_or_404(
@@ -231,6 +237,30 @@ def client_portal_view(request, nomor_invoice):
         invoice = Invoice.objects.select_related('client', 'package').get(nomor_invoice=nomor_invoice)
     except Invoice.DoesNotExist:
         return render(request, 'invoice_not_found.html', {'nomor_invoice': nomor_invoice}, status=404)
+
+    import re
+    # Extract last 4 digits of client's phone number for PIN
+    phone_digits = re.sub(r'\D', '', invoice.client.nomor_wa)
+    expected_pin = phone_digits[-4:] if len(phone_digits) >= 4 else phone_digits.zfill(4)
+    
+    session_key = f'verified_invoice_{invoice.id}'
+    
+    if request.method == 'POST':
+        pin1 = request.POST.get('pin1', '')
+        pin2 = request.POST.get('pin2', '')
+        pin3 = request.POST.get('pin3', '')
+        pin4 = request.POST.get('pin4', '')
+        entered_pin = f'{pin1}{pin2}{pin3}{pin4}'
+        
+        if entered_pin == expected_pin:
+            request.session[session_key] = True
+            return redirect('client_portal', nomor_invoice=nomor_invoice)
+        else:
+            return render(request, 'invoice_verify.html', {'invoice': invoice, 'error': 'Kode PIN salah. Silakan coba lagi.'})
+            
+    if not request.session.get(session_key):
+        return render(request, 'invoice_verify.html', {'invoice': invoice})
+
     vendors = invoice.vendors.all()
     settings = BusinessSettings.get_solo()
 
@@ -255,6 +285,7 @@ def client_portal_view(request, nomor_invoice):
     return render(request, 'client_portal.html', context)
 
 
+@login_required
 def create_invoice_view(request):
     """View untuk membuat invoice baru."""
     if request.method == 'POST':
@@ -327,6 +358,7 @@ def create_invoice_view(request):
     return render(request, 'create_invoice.html', context)
 
 
+@login_required
 def edit_info_view(request):
     """View untuk mengatur default bisnis dan CRUD Paket."""
     settings = BusinessSettings.get_solo()
@@ -384,3 +416,6 @@ def edit_info_view(request):
         'packages': packages,
     }
     return render(request, 'edit_info.html', context)
+
+def unauthorized_access_view(request):
+    return render(request, 'access_denied.html')

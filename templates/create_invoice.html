@@ -36,7 +36,7 @@
 
             <!-- ===================== LEFT: FORM ===================== -->
             <div class="lg:col-span-2">
-                <div class="bg-white dark:bg-dark-600 border border-gray-200 dark:border-dark-50/20 rounded-2xl p-8 animate-fade-in">
+                <div class="bg-white dark:bg-dark-600 border border-gray-200 dark:border-dark-50/20 rounded-2xl p-8">
 
                     <h2 class="text-2xl font-display font-bold text-gray-900 dark:text-white mb-8">Create Invoice</h2>
 
@@ -65,7 +65,7 @@
                                 <div>
                                     <label for="nomor_wa" class="block text-gray-600 dark:text-gray-500 text-[10px] uppercase tracking-wider mb-1.5">Nomor Telepon</label>
                                     <input type="text" name="nomor_wa" id="nomor_wa" required
-                                           class="w-full bg-gray-100 dark:bg-dark-400 border border-gray-200 dark:border-dark-50/20 rounded-lg px-4 py-2.5 text-gray-900 dark:text-white text-sm placeholder-gray-600 focus:outline-none focus:border-gold-500/50 focus:ring-1 focus:ring-gold-500/20 transition-all"
+                                           class="phone-input w-full bg-gray-100 dark:bg-dark-400 border border-gray-200 dark:border-dark-50/20 rounded-lg px-4 py-2.5 text-gray-900 dark:text-white text-sm placeholder-gray-600 focus:outline-none focus:border-gold-500/50 focus:ring-1 focus:ring-gold-500/20 transition-all"
                                            placeholder="08xx-xxxx-xxxx">
                                 </div>
                                 <div class="md:col-span-2">
@@ -103,7 +103,7 @@
                                 <div>
                                     <label for="wa_number" class="block text-gray-600 dark:text-gray-500 text-[10px] uppercase tracking-wider mb-1.5">Nomor WhatsApp Konfirmasi</label>
                                     <input type="text" id="wa_number" name="wa_number" value="{{ settings.nomor_wa_konfirmasi }}" required
-                                           class="w-full bg-gray-100 dark:bg-dark-400 border border-gray-200 dark:border-dark-50/20 rounded-lg px-4 py-2.5 text-gray-900 dark:text-white text-sm focus:outline-none focus:border-gold-500/50 focus:ring-1 focus:ring-gold-500/20 transition-all">
+                                           class="phone-input w-full bg-gray-100 dark:bg-dark-400 border border-gray-200 dark:border-dark-50/20 rounded-lg px-4 py-2.5 text-gray-900 dark:text-white text-sm focus:outline-none focus:border-gold-500/50 focus:ring-1 focus:ring-gold-500/20 transition-all">
                                 </div>
                             </div>
                         </div>
@@ -187,7 +187,7 @@
             </div>
 
             <!-- ===================== RIGHT: SIDEBAR ===================== -->
-            <div class="lg:col-span-1 space-y-6 animate-slide-up" style="animation-delay: 0.2s">
+            <div class="lg:col-span-1 space-y-6">
 
                 <!-- Business Information -->
                 <div class="bg-white dark:bg-dark-600 border border-gold-500/20 rounded-2xl p-6">
@@ -266,7 +266,7 @@
         input.type = 'text';
         input.name = 'vendor_names';
         input.placeholder = 'Nama vendor...';
-        input.className = 'w-full bg-gray-100 dark:bg-dark-400 border border-gray-200 dark:border-dark-50/20 rounded-lg px-4 py-2.5 text-gray-900 dark:text-white text-sm placeholder-gray-600 focus:outline-none focus:border-gold-500/50 focus:ring-1 focus:ring-gold-500/20 transition-all animate-fade-in';
+        input.className = 'w-full bg-gray-100 dark:bg-dark-400 border border-gray-200 dark:border-dark-50/20 rounded-lg px-4 py-2.5 text-gray-900 dark:text-white text-sm placeholder-gray-600 focus:outline-none focus:border-gold-500/50 focus:ring-1 focus:ring-gold-500/20 transition-all';
         container.appendChild(input);
         input.focus();
     }

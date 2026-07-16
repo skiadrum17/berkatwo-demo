@@ -44,7 +44,7 @@
     <!-- ===================== MAIN CONTENT ===================== -->
     <main class="ml-64 flex-1 p-8">
         <!-- Header -->
-        <div class="flex items-center justify-between mb-8 animate-fade-in">
+        <div class="flex items-center justify-between mb-8">
             <div>
                 <h2 class="text-2xl font-display font-bold text-gray-900 dark:text-white tracking-wide">Edit Info & Default</h2>
                 <p class="text-gray-600 dark:text-gray-500 text-sm mt-1">Atur data default bisnis dan kelola daftar paket Anda.</p>
@@ -61,7 +61,7 @@
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
             
             <!-- BUSINESS SETTINGS -->
-            <div class="bg-white dark:bg-dark-600 border border-gray-200 dark:border-dark-50/20 rounded-2xl p-6 animate-slide-up">
+            <div class="bg-white dark:bg-dark-600 border border-gray-200 dark:border-dark-50/20 rounded-2xl p-6">
                 <div class="flex items-center gap-2 mb-6">
                     <div class="w-1.5 h-6 bg-gold-500 rounded-full"></div>
                     <h3 class="text-lg font-display font-bold text-gray-900 dark:text-white">Business Settings</h3>
@@ -121,7 +121,7 @@
                         <div>
                             <label class="block text-gray-600 dark:text-gray-500 text-[10px] uppercase tracking-wider mb-1.5">Nomor WhatsApp Konfirmasi</label>
                             <input type="text" name="nomor_wa_konfirmasi" value="{{ settings.nomor_wa_konfirmasi }}" required
-                                   class="w-full bg-gray-100 dark:bg-dark-400 border border-gray-200 dark:border-dark-50/20 rounded-lg px-4 py-2.5 text-gray-900 dark:text-white text-sm tabular-nums focus:outline-none focus:border-gold-500/50 focus:ring-1 focus:ring-gold-500/20 transition-all">
+                                   class="phone-input w-full bg-gray-100 dark:bg-dark-400 border border-gray-200 dark:border-dark-50/20 rounded-lg px-4 py-2.5 text-gray-900 dark:text-white text-sm tabular-nums focus:outline-none focus:border-gold-500/50 focus:ring-1 focus:ring-gold-500/20 transition-all">
                         </div>
 
                         <div class="pt-4 flex justify-end">
@@ -134,7 +134,7 @@
             </div>
 
             <!-- PACKAGE MANAGEMENT -->
-            <div class="bg-white dark:bg-dark-600 border border-gray-200 dark:border-dark-50/20 rounded-2xl p-6 animate-slide-up" style="animation-delay: 0.1s">
+            <div class="bg-white dark:bg-dark-600 border border-gray-200 dark:border-dark-50/20 rounded-2xl p-6">
                 <div class="flex items-center justify-between mb-6">
                     <div class="flex items-center gap-2">
                         <div class="w-1.5 h-6 bg-gold-500 rounded-full"></div>

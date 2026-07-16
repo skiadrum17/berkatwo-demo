@@ -29,6 +29,22 @@ class Client(models.Model):
             self.customer_id = f'#C-{next_num:04d}'
         super().save(*args, **kwargs)
 
+    @property
+    def get_initials(self):
+        import re
+        # Find all sequences of letters (ignore non-letters like &)
+        words = re.findall(r'[A-Za-z]+', self.nama_lengkap)
+        initials = ''.join(word[0].upper() for word in words)
+        # If no letters found, return first two characters of original string
+        if not initials:
+            return self.nama_lengkap[:2].upper()
+        # You specified 'K' for 'Kevin' and 'KZ' for 'Kevin & Zeya'
+        # To match the logic: returning all initials up to the number of words found
+        # Usually initials are 1 to 2 chars max, but let's just return all of them
+        # Wait, if name is 'Kevin Zeya Pratama', it returns 'KZP'. That's fine.
+        return initials[:3] # limit to 3 chars to fit nicely
+
+
     def __str__(self):
         return f'{self.nama_lengkap} ({self.customer_id})'
 
