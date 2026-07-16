@@ -181,3 +181,6 @@ SOCIALACCOUNT_PROVIDERS = {
 
 SOCIALACCOUNT_LOGIN_ON_GET = True
 ACCOUNT_ADAPTER = 'berkat_wo.adapters.NoMessageAccountAdapter'
+
+# Fix for OAuth redirect URI mismatch behind proxies (e.g. PythonAnywhere)
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
