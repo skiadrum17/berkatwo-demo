@@ -461,11 +461,11 @@ def settings_view(request):
 
 
 def homepage_view(request):
-    settings_obj = SystemSettings.objects.first()
+    settings_obj = BusinessSettings.objects.first()
     wa_number = ''
     wa_link = '#'
-    if settings_obj and settings_obj.nomor_whatsapp:
-        wa_number = settings_obj.nomor_whatsapp
+    if settings_obj and settings_obj.nomor_wa_konfirmasi:
+        wa_number = settings_obj.nomor_wa_konfirmasi
         if wa_number.startswith('0'):
             wa_number = '62' + wa_number[1:]
         # A simple greeting message for general visitors
