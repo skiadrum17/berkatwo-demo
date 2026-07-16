@@ -458,3 +458,22 @@ def settings_view(request):
         'password_form': password_form,
     }
     return render(request, 'settings.html', context)
+
+
+def homepage_view(request):
+    settings_obj = SystemSettings.objects.first()
+    wa_number = ''
+    wa_link = '#'
+    if settings_obj and settings_obj.nomor_whatsapp:
+        wa_number = settings_obj.nomor_whatsapp
+        if wa_number.startswith('0'):
+            wa_number = '62' + wa_number[1:]
+        # A simple greeting message for general visitors
+        wa_message = "Halo Berkat Wedding Organizer, saya ingin bertanya tentang layanan Anda."
+        import urllib.parse
+        wa_link = f'https://api.whatsapp.com/send?phone={wa_number}&text={urllib.parse.quote(wa_message)}'
+        
+    context = {
+        'wa_link': wa_link,
+    }
+    return render(request, 'home.html', context)

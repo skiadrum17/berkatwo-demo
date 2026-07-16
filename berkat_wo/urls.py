@@ -10,5 +10,4 @@ urlpatterns = [
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),
     path('admin/', lambda request: redirect('unauthorized_access')),
     path('accounts/', include('allauth.urls')),
-    path('', lambda request: redirect('dashboard')),
 ]
