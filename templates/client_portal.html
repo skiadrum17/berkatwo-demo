@@ -253,7 +253,7 @@
 <div id="payModal" class="fixed inset-0 z-50 hidden">
     <div class="modal-overlay absolute inset-0" id="modalOverlay"></div>
     <div class="relative flex items-center justify-center min-h-screen p-4">
-        <div class="bg-white dark:bg-dark-600 border border-gold-500/30 rounded-2xl w-full max-w-md p-8 relative animate-slide-up shadow-2xl shadow-black/50">
+        <div class="bg-white dark:bg-dark-600 border border-gold-500/30 rounded-2xl w-full max-w-md p-8 relative animate-slide-up shadow-2xl shadow-black/50 max-h-[90vh] overflow-y-auto">
 
             <!-- Close Button -->
             <button id="closeModal" class="absolute top-4 right-4 text-gray-600 dark:text-gray-500 hover:text-gray-900 dark:text-white transition-colors">
@@ -299,14 +299,9 @@
 
             <!-- Bank Info -->
             <div class="bg-gray-100/80 dark:bg-dark-400/50 border border-gray-200 dark:border-dark-50/20 rounded-xl p-5 mb-6">
-                <div class="flex items-center gap-3 mb-4">
-                    <div class="w-12 h-7 bg-white dark:bg-dark-500 rounded flex items-center justify-center">
-                        <span class="text-blue-800 dark:text-blue-400 font-bold text-xs tracking-wider">BANK</span>
-                    </div>
-                    <div>
-                        <p class="text-gray-900 dark:text-white text-sm font-semibold">{{ invoice.bank_name|default:settings.nama_bank }}</p>
-                        <p class="text-gray-600 dark:text-gray-500 text-xs">Transfer Bank</p>
-                    </div>
+                <div class="mb-4">
+                    <p class="text-gray-900 dark:text-white text-sm font-semibold">{{ invoice.bank_name|default:settings.nama_bank }}</p>
+                    <p class="text-gray-600 dark:text-gray-500 text-xs">Transfer Bank</p>
                 </div>
 
                 <div class="space-y-3">

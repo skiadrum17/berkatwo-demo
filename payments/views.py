@@ -1,3 +1,7 @@
+
+from django.contrib.auth.forms import PasswordChangeForm
+from django.contrib.auth import update_session_auth_hash
+from .forms import UserProfileForm
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.db.models import Sum, Count, Q
@@ -195,7 +199,7 @@ Terima kasih atas kepercayaan dan kerja samanya.
 Salam hangat,
 Admin Berkat WO"""
     
-    wa_client_link = f"https://wa.me/{client_phone}?text={urllib.parse.quote(wa_message)}"
+    wa_client_link = f"https://api.whatsapp.com/send?phone={client_phone}&text={urllib.parse.quote(wa_message)}"
 
     context = {
         'invoice': invoice,
@@ -419,3 +423,38 @@ def edit_info_view(request):
 
 def unauthorized_access_view(request):
     return render(request, 'access_denied.html')
+
+
+@login_required(login_url='/login/')
+def settings_view(request):
+    if request.method == 'POST':
+        if 'update_profile' in request.POST:
+            profile_form = UserProfileForm(request.POST, instance=request.user)
+            password_form = PasswordChangeForm(request.user)
+            if profile_form.is_valid():
+                profile_form.save()
+                messages.success(request, 'Profil Anda berhasil diperbarui.')
+                return redirect('settings')
+        elif 'update_password' in request.POST:
+            profile_form = UserProfileForm(instance=request.user)
+            password_form = PasswordChangeForm(request.user, request.POST)
+            if password_form.is_valid():
+                user = password_form.save()
+                update_session_auth_hash(request, user)  # Important, to update the session with the new password
+                messages.success(request, 'Kata sandi berhasil diubah.')
+                return redirect('settings')
+            else:
+                messages.error(request, 'Gagal mengubah kata sandi. Silakan periksa kembali.')
+    else:
+        profile_form = UserProfileForm(instance=request.user)
+        password_form = PasswordChangeForm(request.user)
+
+    # Note: PasswordChangeForm fields need Tailwind classes
+    for field_name, field in password_form.fields.items():
+        field.widget.attrs['class'] = 'w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-dark-50/20 bg-white dark:bg-dark-900 text-gray-900 dark:text-white text-sm focus:ring-2 focus:ring-gold-500/50 focus:border-gold-500 outline-none transition-all placeholder-gray-400'
+
+    context = {
+        'profile_form': profile_form,
+        'password_form': password_form,
+    }
+    return render(request, 'settings.html', context)
