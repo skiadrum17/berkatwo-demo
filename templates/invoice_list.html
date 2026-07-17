@@ -17,7 +17,7 @@
                     </a>
                     <div>
                         <h1 class="text-gray-900 dark:text-white font-display font-bold text-lg tracking-wide">BERKAT</h1>
-                        <p class="text-gray-600 dark:text-gray-500 text-[10px] tracking-widest uppercase leading-tight">Wedding Organizer<br>& Planner Solo</p>
+                        <p class="text-gray-600 dark:text-gray-500 text-[10px] tracking-widest uppercase leading-tight">Wedding Organizer<br>& Planner</p>
                     </div>
                 </div>
             </div>
@@ -132,20 +132,38 @@
 
                         <!-- Search & Filter -->
                         <div class="flex items-center gap-3">
-                            <form method="GET" action="{% url 'invoice_list' %}" class="relative">
+                            <form method="GET" action="{% url 'invoice_list' %}" class="relative flex items-center gap-3">
                                 <input type="hidden" name="tab" value="{{ current_tab }}">
-                                <svg class="w-4 h-4 text-gray-600 dark:text-gray-500 absolute left-3 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
-                                <input type="text" name="q" value="{{ search_query }}" placeholder="Search invoices or clients..."
-                                       class="bg-gray-100 dark:bg-dark-400 border border-gray-200 dark:border-dark-50/30 rounded-lg pl-10 pr-4 py-2 text-sm text-gray-900 dark:text-white placeholder-gray-600 focus:outline-none focus:border-gold-500/50 focus:ring-1 focus:ring-gold-500/20 w-64 transition-all">
+                                <div class="relative">
+                                    <svg class="w-4 h-4 text-gray-600 dark:text-gray-500 absolute left-3 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                                    <input type="text" name="q" value="{{ search_query }}" placeholder="Search invoices or clients..."
+                                           class="bg-gray-100 dark:bg-dark-400 border border-gray-200 dark:border-dark-50/30 rounded-lg pl-10 pr-4 py-2 text-sm text-gray-900 dark:text-white placeholder-gray-600 focus:outline-none focus:border-gold-500/50 focus:ring-1 focus:ring-gold-500/20 w-64 transition-all">
+                                </div>
+                                
+                                <div class="relative">
+                                    <button type="button" id="sortDropdownBtn" onclick="document.getElementById('sortDropdown').classList.toggle('hidden')" class="flex items-center gap-1.5 text-gray-600 dark:text-gray-500 hover:text-gray-900 dark:hover:text-gray-300 text-sm font-medium transition-colors focus:outline-none bg-transparent">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 4h13M3 8h9m-9 4h6m4 0l4-4m0 0l4 4m-4-4v12"/></svg>
+                                        Sort By
+                                    </button>
+                                    <div id="sortDropdown" class="hidden absolute right-0 mt-2 w-48 bg-white dark:bg-dark-400 border border-gray-200 dark:border-dark-50/20 rounded-xl shadow-lg shadow-black/5 dark:shadow-black/20 z-50 overflow-hidden">
+                                        <input type="hidden" name="sort" id="sortInput" value="{{ current_sort }}">
+                                        <ul class="py-1.5 text-sm text-gray-700 dark:text-gray-300">
+                                            <li>
+                                                <button type="button" onclick="document.getElementById('sortInput').value='date_desc'; this.closest('form').submit()" class="w-full text-left px-4 py-2.5 hover:bg-gray-50 dark:hover:bg-dark-300 transition-colors {% if current_sort == 'date_desc' %}text-gold-500 font-medium{% endif %}">Terbaru</button>
+                                            </li>
+                                            <li>
+                                                <button type="button" onclick="document.getElementById('sortInput').value='date_asc'; this.closest('form').submit()" class="w-full text-left px-4 py-2.5 hover:bg-gray-50 dark:hover:bg-dark-300 transition-colors {% if current_sort == 'date_asc' %}text-gold-500 font-medium{% endif %}">Terlama</button>
+                                            </li>
+                                            <li>
+                                                <button type="button" onclick="document.getElementById('sortInput').value='total_desc'; this.closest('form').submit()" class="w-full text-left px-4 py-2.5 hover:bg-gray-50 dark:hover:bg-dark-300 transition-colors {% if current_sort == 'total_desc' %}text-gold-500 font-medium{% endif %}">Total Tertinggi</button>
+                                            </li>
+                                            <li>
+                                                <button type="button" onclick="document.getElementById('sortInput').value='total_asc'; this.closest('form').submit()" class="w-full text-left px-4 py-2.5 hover:bg-gray-50 dark:hover:bg-dark-300 transition-colors {% if current_sort == 'total_asc' %}text-gold-500 font-medium{% endif %}">Total Terendah</button>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
                             </form>
-                            <button class="flex items-center gap-1.5 text-gray-600 dark:text-gray-500 hover:text-gray-600 dark:text-gray-300 text-sm transition-colors">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"/></svg>
-                                Filter
-                            </button>
-                            <button class="flex items-center gap-1.5 text-gray-600 dark:text-gray-500 hover:text-gray-600 dark:text-gray-300 text-sm transition-colors">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 4h13M3 8h9m-9 4h6m4 0l4-4m0 0l4 4m-4-4v12"/></svg>
-                                Sort By
-                            </button>
                         </div>
                     </div>
                 </div>
@@ -206,12 +224,17 @@
                                         <a href="{% url 'admin_invoice' invoice.nomor_invoice %}" class="text-gray-600 dark:text-gray-500 hover:text-gold-500 transition-colors" title="Manage Invoice">
                                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
                                         </a>
-                                        <form method="POST" action="{% url 'delete_invoice' invoice.nomor_invoice %}" class="inline m-0" onsubmit="return confirm('Yakin ingin menghapus invoice ini?');">
-                                            {% csrf_token %}
-                                            <button type="submit" class="text-gray-600 dark:text-gray-500 hover:text-red-500 transition-colors" title="Hapus Invoice">
-                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
-                                            </button>
-                                        </form>
+                                        <form method="POST" action="{% url 'delete_invoice' invoice.nomor_invoice %}" class="inline-block" onsubmit="confirmDeleteInvoice(event, this)">
+                                                {% csrf_token %}
+                                                <button type="submit"
+                                                    class="text-gray-400 hover:text-red-500 transition-colors p-1"
+                                                    title="Hapus">
+                                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                                    </svg>
+                                                </button>
+                                            </form>
                                     </div>
                                 </td>
                             </tr>
@@ -269,6 +292,35 @@
             el.style.opacity = '1';
             el.style.transform = 'translateY(0)';
         }, 300);
+    });
+
+    // Delete invoice confirmation
+    function confirmDeleteInvoice(event, form) {
+        event.preventDefault();
+        Swal.fire({
+            title: 'Hapus Invoice?',
+            text: "Tindakan ini tidak dapat dibatalkan.",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Ya, Hapus!',
+            cancelButtonText: 'Batal',
+            background: document.documentElement.classList.contains('dark') ? '#1e293b' : '#fff',
+            color: document.documentElement.classList.contains('dark') ? '#fff' : '#111',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                form.submit();
+            }
+        });
+    }
+    // Close dropdown on click outside
+    document.addEventListener('click', function(event) {
+        const dropdown = document.getElementById('sortDropdown');
+        const button = document.getElementById('sortDropdownBtn');
+        if (dropdown && button && !button.contains(event.target) && !dropdown.contains(event.target)) {
+            dropdown.classList.add('hidden');
+        }
     });
 </script>
 {% endblock %}

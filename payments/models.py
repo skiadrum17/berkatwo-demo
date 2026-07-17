@@ -200,6 +200,37 @@ class VendorTracker(models.Model):
         verbose_name='Nama Vendor',
         help_text='Contoh: Venue, Katering, MUA',
     )
+    
+    nama_addon = models.CharField(
+        max_length=200,
+        blank=True,
+        null=True,
+        verbose_name='Nama Add-on',
+    )
+    harga_addon = models.DecimalField(
+        max_digits=15,
+        decimal_places=0,
+        default=0,
+        verbose_name='Harga Add-on (Rp)',
+    )
+    dibayar_addon = models.DecimalField(
+        max_digits=15,
+        decimal_places=0,
+        default=0,
+        verbose_name='Dibayar Add-on (Rp)',
+    )
+    harga = models.DecimalField(
+        max_digits=15,
+        decimal_places=0,
+        default=0,
+        verbose_name='Harga Vendor (Rp)',
+    )
+    dibayar = models.DecimalField(
+        max_digits=15,
+        decimal_places=0,
+        default=0,
+        verbose_name='Nominal Dibayar (Rp)',
+    )
     progress_persen = models.IntegerField(
         default=0,
         verbose_name='Progress (%)',
@@ -216,6 +247,28 @@ class VendorTracker(models.Model):
         verbose_name = 'Vendor Tracker'
         verbose_name_plural = 'Vendor Trackers'
         ordering = ['nama_vendor']
+
+    def save(self, *args, **kwargs):
+        # Hitung progress
+        total_harga = self.harga + self.harga_addon
+        total_dibayar = self.dibayar + self.dibayar_addon
+        
+        if total_harga > 0:
+            self.progress_persen = min(100, int((total_dibayar / total_harga) * 100))
+        elif total_dibayar > 0 and total_harga == 0:
+            self.progress_persen = 100
+        else:
+            self.progress_persen = 0
+            
+        # Update status otomatis berdasarkan progress
+        if self.progress_persen == 100:
+            self.status_pembayaran = 'selesai'
+        elif self.progress_persen > 0:
+            self.status_pembayaran = 'proses'
+        else:
+            self.status_pembayaran = 'menunggu'
+            
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return f'{self.nama_vendor} ({self.invoice.nomor_invoice}) - {self.progress_persen}%'

@@ -72,10 +72,22 @@ def invoice_list_view(request):
             Q(client__customer_id__icontains=search)
         )
 
+    # Sort
+    sort_by = request.GET.get('sort', 'date_desc')
+    if sort_by == 'date_desc':
+        invoices = invoices.order_by('-tanggal_dibuat')
+    elif sort_by == 'date_asc':
+        invoices = invoices.order_by('tanggal_dibuat')
+    elif sort_by == 'total_desc':
+        invoices = invoices.order_by('-total_tagihan')
+    elif sort_by == 'total_asc':
+        invoices = invoices.order_by('total_tagihan')
+
     context = {
         'invoices': invoices,
         'current_tab': tab,
         'search_query': search,
+        'current_sort': sort_by,
     }
     return render(request, 'invoice_list.html', context)
 
@@ -86,7 +98,7 @@ def delete_invoice_view(request, nomor_invoice):
         invoice = get_object_or_404(Invoice, nomor_invoice=nomor_invoice)
         invoice.delete()
         messages.success(request, f'Invoice {nomor_invoice} berhasil dihapus.')
-    return redirect('invoice_list')
+    return redirect('dashboard')
 
 
 @login_required
@@ -138,37 +150,84 @@ def admin_invoice_view(request, nomor_invoice):
 
         elif action == 'update_vendors':
             # Update each vendor
+            total_addon_diff = 0
             for vendor in vendors:
-                progress_key = f'progress_persen_{vendor.id}'
                 status_key = f'status_vendor_{vendor.id}'
+                harga_key = f'harga_vendor_{vendor.id}'
+                dibayar_key = f'dibayar_vendor_{vendor.id}'
+                nama_addon_key = f'nama_addon_{vendor.id}'
+                harga_addon_key = f'harga_addon_{vendor.id}'
 
-                progress = request.POST.get(progress_key, vendor.progress_persen)
                 status = request.POST.get(status_key, vendor.status_pembayaran)
+                harga_raw = request.POST.get(harga_key, str(vendor.harga)).replace('.', '')
+                dibayar_raw = request.POST.get(dibayar_key, str(vendor.dibayar)).replace('.', '')
+                nama_addon = request.POST.get(nama_addon_key, vendor.nama_addon or '')
+                harga_addon_raw = request.POST.get(harga_addon_key, str(vendor.harga_addon)).replace('.', '')
 
                 try:
-                    vendor.progress_persen = max(0, min(100, int(progress)))
+                    vendor.harga = int(harga_raw)
+                    vendor.dibayar = int(dibayar_raw)
+                except (ValueError, TypeError):
+                    pass
+                
+                try:
+                    new_harga_addon = int(harga_addon_raw)
+                    if vendor.harga_addon != new_harga_addon:
+                        total_addon_diff += (new_harga_addon - vendor.harga_addon)
+                    vendor.harga_addon = new_harga_addon
                 except (ValueError, TypeError):
                     pass
 
                 vendor.status_pembayaran = status
+                vendor.nama_addon = nama_addon
                 vendor.save()
+            
+            if total_addon_diff != 0:
+                invoice.total_tagihan += total_addon_diff
+                invoice.save()
 
             messages.success(request, 'Data vendor berhasil diperbarui.')
 
         elif action == 'add_vendor':
             nama = request.POST.get('new_vendor_nama', '').strip()
+            harga_raw = request.POST.get('new_vendor_harga', '0').replace('.', '')
+            try:
+                harga = int(harga_raw)
+            except ValueError:
+                harga = 0
+                
+            nama_addon = request.POST.get('new_addon_nama', '').strip()
+            harga_addon_raw = request.POST.get('new_addon_harga', '0').replace('.', '')
+            try:
+                harga_addon = int(harga_addon_raw)
+            except ValueError:
+                harga_addon = 0
+                
             if nama:
                 VendorTracker.objects.create(
                     invoice=invoice,
                     nama_vendor=nama,
+                    harga=harga,
+                    nama_addon=nama_addon,
+                    harga_addon=harga_addon,
                 )
+                if harga_addon > 0:
+                    invoice.total_tagihan += harga_addon
+                    invoice.save()
                 messages.success(request, f'Vendor "{nama}" berhasil ditambahkan.')
 
         elif action == 'delete_vendor':
             vendor_id = request.POST.get('vendor_id')
             if vendor_id:
-                VendorTracker.objects.filter(id=vendor_id, invoice=invoice).delete()
-                messages.success(request, 'Vendor berhasil dihapus.')
+                try:
+                    vendor = VendorTracker.objects.get(id=vendor_id, invoice=invoice)
+                    if vendor.harga_addon > 0:
+                        invoice.total_tagihan -= vendor.harga_addon
+                        invoice.save()
+                    vendor.delete()
+                    messages.success(request, 'Vendor berhasil dihapus.')
+                except VendorTracker.DoesNotExist:
+                    messages.error(request, 'Vendor tidak ditemukan.')
 
         return redirect('admin_invoice', nomor_invoice=nomor_invoice)
 
@@ -341,11 +400,29 @@ def create_invoice_view(request):
 
         # Create vendor trackers
         vendor_names = request.POST.getlist('vendor_names')
-        for name in vendor_names:
+        vendor_prices = request.POST.getlist('vendor_prices')
+        addon_names = request.POST.getlist('addon_names')
+        addon_prices = request.POST.getlist('addon_prices')
+        
+        for idx, name in enumerate(vendor_names):
             if name.strip():
+                try:
+                    harga = int(str(vendor_prices[idx]).replace('.', '')) if idx < len(vendor_prices) else 0
+                except (ValueError, TypeError):
+                    harga = 0
+                    
+                nama_addon = addon_names[idx].strip() if idx < len(addon_names) else ''
+                try:
+                    harga_addon = int(str(addon_prices[idx]).replace('.', '')) if idx < len(addon_prices) else 0
+                except (ValueError, TypeError):
+                    harga_addon = 0
+                
                 VendorTracker.objects.create(
                     invoice=invoice,
                     nama_vendor=name.strip(),
+                    harga=harga,
+                    nama_addon=nama_addon,
+                    harga_addon=harga_addon,
                 )
 
         return redirect('admin_invoice', nomor_invoice=invoice.nomor_invoice)

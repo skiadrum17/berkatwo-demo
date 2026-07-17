@@ -14,7 +14,7 @@
                 </a>
                 <div>
                     <h1 class="text-gray-900 dark:text-white font-display font-bold text-xl tracking-wide">BERKAT</h1>
-                    <p class="text-gray-600 dark:text-gray-500 text-[10px] tracking-widest uppercase">Wedding Organizer & Planner Solo</p>
+                    <p class="text-gray-600 dark:text-gray-500 text-[10px] tracking-widest uppercase">Wedding Organizer & Planner</p>
                 </div>
             </div>
             <div class="flex items-center gap-4">
@@ -34,7 +34,6 @@
     <div class="max-w-7xl mx-auto px-8 py-10">
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
 
-            <!-- ===================== LEFT: FORM ===================== -->
             <div class="lg:col-span-2">
                 <div class="bg-white dark:bg-dark-600 border border-gray-200 dark:border-dark-50/20 rounded-2xl p-8">
 
@@ -168,12 +167,24 @@
                             </div>
 
                             <div id="vendorFields" class="space-y-3">
-                                <input type="text" name="vendor_names" placeholder="e.g., Gedung (Venue)"
-                                       class="w-full bg-gray-100 dark:bg-dark-400 border border-gray-200 dark:border-dark-50/20 rounded-lg px-4 py-2.5 text-gray-900 dark:text-white text-sm placeholder-gray-600 focus:outline-none focus:border-gold-500/50 focus:ring-1 focus:ring-gold-500/20 transition-all">
-                                <input type="text" name="vendor_names" placeholder="e.g., Katering (Catering)"
-                                       class="w-full bg-gray-100 dark:bg-dark-400 border border-gray-200 dark:border-dark-50/20 rounded-lg px-4 py-2.5 text-gray-900 dark:text-white text-sm placeholder-gray-600 focus:outline-none focus:border-gold-500/50 focus:ring-1 focus:ring-gold-500/20 transition-all">
-                                <input type="text" name="vendor_names" placeholder="e.g., MUA (Makeup)"
-                                       class="w-full bg-gray-100 dark:bg-dark-400 border border-gray-200 dark:border-dark-50/20 rounded-lg px-4 py-2.5 text-gray-900 dark:text-white text-sm placeholder-gray-600 focus:outline-none focus:border-gold-500/50 focus:ring-1 focus:ring-gold-500/20 transition-all">
+                                <!-- Vendor Field Template -->
+                                <div class="flex flex-col gap-3 bg-gray-100 dark:bg-dark-400 p-3 rounded-lg border border-gray-200 dark:border-dark-50/20">
+                                    <div class="flex items-center gap-3">
+                                        <input type="text" name="vendor_names" placeholder="Nama vendor (e.g., Gedung)"
+                                            class="flex-1 bg-white dark:bg-dark-300 border border-gray-200 dark:border-dark-50/20 rounded-lg px-3 py-2 text-gray-900 dark:text-white text-sm placeholder-gray-600 focus:outline-none focus:border-gold-500/50 focus:ring-1 focus:ring-gold-500/20 transition-all">
+                                        <input type="text" name="vendor_prices" placeholder="Harga Vendor (Rp)"
+                                            class="rupiah-input w-40 bg-white dark:bg-dark-300 border border-gray-200 dark:border-dark-50/20 rounded-lg px-3 py-2 text-gray-900 dark:text-white text-sm focus:outline-none focus:border-gold-500/50 focus:ring-1 focus:ring-gold-500/20 transition-all tabular-nums">
+                                        <button type="button" onclick="this.closest('.flex-col').remove(); updateTotal();" class="text-gray-400 hover:text-red-500 transition-colors p-1">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                                        </button>
+                                    </div>
+                                    <div class="flex items-center gap-3 pl-6 border-l-2 border-gray-200 dark:border-dark-300 ml-2">
+                                        <input type="text" name="addon_names" placeholder="Nama Add-on (opsional)"
+                                            class="flex-1 bg-white dark:bg-dark-300 border border-gray-200 dark:border-dark-50/20 rounded-lg px-3 py-2 text-gray-900 dark:text-white text-sm placeholder-gray-600 focus:outline-none focus:border-gold-500/50 focus:ring-1 focus:ring-gold-500/20 transition-all">
+                                        <input type="text" name="addon_prices" placeholder="Harga Add-on (Rp)"
+                                            class="rupiah-input w-40 bg-white dark:bg-dark-300 border border-gray-200 dark:border-dark-50/20 rounded-lg px-3 py-2 text-gray-900 dark:text-white text-sm focus:outline-none focus:border-gold-500/50 focus:ring-1 focus:ring-gold-500/20 transition-all tabular-nums" oninput="updateTotal()">
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
@@ -249,26 +260,71 @@
         dateEl.value = `${year}-${month}-${day}`;
     }
 
-    // Update total when package is selected
+    // Format number with dots
+    function formatWithDots(num) {
+        return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+    }
+
+    // Attach rupiah formatter
+    function attachRupiahFormatter(input) {
+        input.addEventListener('input', function () {
+            const pos = this.selectionStart;
+            const oldLen = this.value.length;
+            const raw = this.value.replace(/\D/g, '');
+            const num = parseInt(raw) || 0;
+            this.value = num > 0 ? formatWithDots(num) : '';
+            const newLen = this.value.length;
+            const newPos = pos + (newLen - oldLen);
+            this.setSelectionRange(newPos, newPos);
+        });
+    }
+
+    document.querySelectorAll('.rupiah-input').forEach(input => {
+        attachRupiahFormatter(input);
+    });
+
+    // Update total when package is selected or addons changed
     function updateTotal() {
         const select = document.getElementById('package_id');
         const totalInput = document.getElementById('total_tagihan');
         const selectedOption = select.options[select.selectedIndex];
+        
+        let basePrice = 0;
         if (selectedOption && selectedOption.dataset.price) {
-            totalInput.value = selectedOption.dataset.price;
+            basePrice = parseInt(selectedOption.dataset.price) || 0;
         }
+        
+        let addonsTotal = 0;
+        const addonPrices = document.getElementsByName('addon_prices');
+        for (let i = 0; i < addonPrices.length; i++) {
+            const rawPrice = addonPrices[i].value.replace(/\./g, '');
+            addonsTotal += parseInt(rawPrice) || 0;
+        }
+        
+        totalInput.value = basePrice + addonsTotal;
     }
 
     // Add vendor field dynamically
     function addVendorField() {
         const container = document.getElementById('vendorFields');
-        const input = document.createElement('input');
-        input.type = 'text';
-        input.name = 'vendor_names';
-        input.placeholder = 'Nama vendor...';
-        input.className = 'w-full bg-gray-100 dark:bg-dark-400 border border-gray-200 dark:border-dark-50/20 rounded-lg px-4 py-2.5 text-gray-900 dark:text-white text-sm placeholder-gray-600 focus:outline-none focus:border-gold-500/50 focus:ring-1 focus:ring-gold-500/20 transition-all';
-        container.appendChild(input);
-        input.focus();
+        const div = document.createElement('div');
+        div.className = 'flex flex-col gap-3 bg-gray-100 dark:bg-dark-400 p-3 rounded-lg border border-gray-200 dark:border-dark-50/20';
+        div.innerHTML = `
+            <div class="flex items-center gap-3">
+                <input type="text" name="vendor_names" placeholder="Nama vendor..." class="flex-1 bg-white dark:bg-dark-300 border border-gray-200 dark:border-dark-50/20 rounded-lg px-3 py-2 text-gray-900 dark:text-white text-sm placeholder-gray-600 focus:outline-none focus:border-gold-500/50 focus:ring-1 focus:ring-gold-500/20 transition-all">
+                <input type="text" name="vendor_prices" placeholder="Harga Vendor (Rp)" class="rupiah-input w-40 bg-white dark:bg-dark-300 border border-gray-200 dark:border-dark-50/20 rounded-lg px-3 py-2 text-gray-900 dark:text-white text-sm focus:outline-none focus:border-gold-500/50 focus:ring-1 focus:ring-gold-500/20 transition-all tabular-nums">
+                <button type="button" onclick="this.closest('.flex-col').remove(); updateTotal();" class="text-gray-400 hover:text-red-500 transition-colors p-1">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                </button>
+            </div>
+            <div class="flex items-center gap-3 pl-6 border-l-2 border-gray-200 dark:border-dark-300 ml-2">
+                <input type="text" name="addon_names" placeholder="Nama Add-on (opsional)" class="flex-1 bg-white dark:bg-dark-300 border border-gray-200 dark:border-dark-50/20 rounded-lg px-3 py-2 text-gray-900 dark:text-white text-sm placeholder-gray-600 focus:outline-none focus:border-gold-500/50 focus:ring-1 focus:ring-gold-500/20 transition-all">
+                <input type="text" name="addon_prices" placeholder="Harga Add-on (Rp)" class="rupiah-input w-40 bg-white dark:bg-dark-300 border border-gray-200 dark:border-dark-50/20 rounded-lg px-3 py-2 text-gray-900 dark:text-white text-sm focus:outline-none focus:border-gold-500/50 focus:ring-1 focus:ring-gold-500/20 transition-all tabular-nums" oninput="updateTotal()">
+            </div>
+        `;
+        container.appendChild(div);
+        div.querySelectorAll('.rupiah-input').forEach(attachRupiahFormatter);
+        div.querySelector('input[name="vendor_names"]').focus();
     }
 </script>
 {% endblock %}
