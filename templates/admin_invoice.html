@@ -259,8 +259,16 @@
                                             {% endif %}
                                         </div>
                                         <div>
-                                            <p class="text-gray-900 dark:text-white text-sm font-bold">{{ vendor.nama_vendor }}</p>
-                                            <p class="text-gray-600 dark:text-gray-500 text-xs mt-0.5">
+                                            <p class="text-gray-900 dark:text-white text-sm font-bold flex items-center gap-2 flex-wrap">
+                                                {{ vendor.nama_vendor }}
+                                                <span class="bg-gray-200 dark:bg-dark-300 text-gray-700 dark:text-gray-300 px-2 py-0.5 rounded text-[10px] font-normal tabular-nums tracking-wide">Total: {{ vendor.total_harga|rupiah }}</span>
+                                                {% if vendor.sisa_pembayaran > 0 %}
+                                                <span class="bg-red-500/10 text-red-500 px-2 py-0.5 rounded text-[10px] font-normal tabular-nums tracking-wide">Sisa: {{ vendor.sisa_pembayaran|rupiah }}</span>
+                                                {% else %}
+                                                <span class="bg-green-500/10 text-green-500 px-2 py-0.5 rounded text-[10px] font-normal tracking-wide">Lunas</span>
+                                                {% endif %}
+                                            </p>
+                                            <p class="text-gray-600 dark:text-gray-500 text-xs mt-1">
                                                 Progress: {{ vendor.progress_persen }}%
                                             </p>
                                         </div>

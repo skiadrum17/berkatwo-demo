@@ -270,6 +270,15 @@ class VendorTracker(models.Model):
             
         super().save(*args, **kwargs)
 
+    @property
+    def total_harga(self):
+        return self.harga + self.harga_addon
+        
+    @property
+    def sisa_pembayaran(self):
+        sisa = self.total_harga - (self.dibayar + self.dibayar_addon)
+        return max(0, sisa)
+
     def __str__(self):
         return f'{self.nama_vendor} ({self.invoice.nomor_invoice}) - {self.progress_persen}%'
 
