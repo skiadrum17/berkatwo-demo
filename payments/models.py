@@ -184,9 +184,11 @@ class VendorTracker(models.Model):
     """Model untuk tracking progress vendor."""
 
     STATUS_CHOICES = [
-        ('menunggu', 'Menunggu'),
+        ('menunggu', 'Menunggu Pembayaran'),
+        ('dp', 'DP Terbayar'),
         ('proses', 'Proses'),
-        ('selesai', 'Selesai'),
+        ('lunas', 'Lunas'),
+        ('overdue', 'Overdue'),
     ]
 
     invoice = models.ForeignKey(
@@ -260,13 +262,7 @@ class VendorTracker(models.Model):
         else:
             self.progress_persen = 0
             
-        # Update status otomatis berdasarkan progress
-        if self.progress_persen == 100:
-            self.status_pembayaran = 'selesai'
-        elif self.progress_persen > 0:
-            self.status_pembayaran = 'proses'
-        else:
-            self.status_pembayaran = 'menunggu'
+        # (We removed the auto-update status here so the user can freely select 'overdue', 'dp', etc. from the UI without it being overwritten)
             
         super().save(*args, **kwargs)
 
